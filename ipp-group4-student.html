@@ -1,0 +1,1029 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>IPP Student view: Discovery and Application Tracking</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<!-- Outside claude.ai you can add Tabler 1.4.0 here: https://cdn.jsdelivr.net/npm/@tabler/core@1.4.0/dist/css/tabler.min.css -->
+<style>
+  /* Tabler 1.4-style stylesheet, inlined because published pages block external CSS.
+     Class names match Tabler, so the real tabler.min.css can replace this block later. */
+  :root {
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    --tblr-font-sans-serif: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --tblr-primary: #066fd1; --tblr-primary-rgb: 6, 111, 209; --tblr-primary-hover: #0560b8;
+    --tblr-blue-rgb: 6, 111, 209; --tblr-azure-rgb: 66, 153, 225; --tblr-green-rgb: 47, 179, 68;
+    --tblr-orange-rgb: 247, 103, 7; --tblr-purple-rgb: 174, 62, 201; --tblr-teal-rgb: 12, 166, 120;
+    --tblr-yellow-rgb: 245, 159, 0; --tblr-red-rgb: 214, 57, 57; --tblr-secondary-rgb: 102, 115, 130;
+    --tblr-body-bg: #f6f8fb; --tblr-bg-surface: #ffffff; --tblr-bg-surface-secondary: #f9fafb;
+    --tblr-body-color: #182433; --tblr-secondary: #667382; --tblr-border-color: #dce1e7;
+    --tblr-shadow: 0 2px 4px rgba(24, 36, 51, .04); --tblr-radius: 6px; --tblr-radius-lg: 8px;
+    color-scheme: light;
+  }
+  [data-bs-theme="dark"], :root[data-theme="dark"] {
+    --tblr-body-bg: #151f2c; --tblr-bg-surface: #182433; --tblr-bg-surface-secondary: #1b2a3c;
+    --tblr-body-color: #dce1e7; --tblr-secondary: #8a99ab; --tblr-border-color: #2a3c52;
+    --tblr-primary: #3b8fe0; --tblr-primary-rgb: 59, 143, 224; --tblr-primary-hover: #5aa2e6;
+    --tblr-shadow: none; color-scheme: dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]):not([data-bs-theme]) {
+      --tblr-body-bg: #151f2c; --tblr-bg-surface: #182433; --tblr-bg-surface-secondary: #1b2a3c;
+      --tblr-body-color: #dce1e7; --tblr-secondary: #8a99ab; --tblr-border-color: #2a3c52;
+      --tblr-primary: #3b8fe0; --tblr-primary-rgb: 59, 143, 224; color-scheme: dark;
+    }
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; font-family: var(--tblr-font-sans-serif); font-size: .875rem; line-height: 1.4286;
+    background: var(--tblr-body-bg); color: var(--tblr-body-color); -webkit-font-smoothing: antialiased;
+  }
+  [hidden] { display: none !important; }
+  h1, h2, h3, h4, .h3, .h4 { margin: 0 0 .5rem; font-weight: 600; line-height: 1.3; }
+  .h3 { font-size: 1rem; } .h4 { font-size: .875rem; }
+  p { margin: 0 0 1rem; }
+  strong { font-weight: 600; }
+  button { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid rgba(var(--tblr-primary-rgb), .7); outline-offset: 2px; }
+
+  /* Utilities */
+  .d-flex { display: flex !important; } .d-block { display: block !important; } .d-none { display: none !important; }
+  @media (min-width: 576px) { .d-sm-block { display: block !important; } .d-sm-none { display: none !important; } }
+  .flex-wrap { flex-wrap: wrap !important; } .flex-column { flex-direction: column !important; } .flex-fill { flex: 1 1 auto !important; }
+  .align-items-center { align-items: center !important; } .justify-content-between { justify-content: space-between !important; }
+  .gap-2 { gap: .5rem !important; } .h-100 { height: 100% !important; } .w-1 { width: 1% !important; white-space: nowrap; }
+  .m-0 { margin: 0 !important; } .mb-0 { margin-bottom: 0 !important; } .mb-2 { margin-bottom: .5rem !important; }
+  .mb-3 { margin-bottom: 1rem !important; } .mb-4 { margin-bottom: 1.5rem !important; } .mt-1 { margin-top: .25rem !important; }
+  .mt-2 { margin-top: .5rem !important; } .mt-3 { margin-top: 1rem !important; } .mt-auto { margin-top: auto !important; }
+  .me-1 { margin-right: .25rem !important; } .me-2 { margin-right: .5rem !important; } .me-auto { margin-right: auto !important; }
+  .ms-2 { margin-left: .5rem !important; } .ps-0 { padding-left: 0 !important; } .pt-3 { padding-top: 1rem !important; }
+  .px-3 { padding-left: 1rem !important; padding-right: 1rem !important; } .py-2 { padding-top: .5rem !important; padding-bottom: .5rem !important; }
+  .py-3 { padding-top: 1rem !important; padding-bottom: 1rem !important; } .py-4 { padding-top: 1.5rem !important; padding-bottom: 1.5rem !important; }
+  .small { font-size: .8125rem; } .fw-bold { font-weight: 700 !important; } .fw-medium { font-weight: 500 !important; } .fw-normal { font-weight: 400 !important; }
+  .text-secondary { color: var(--tblr-secondary) !important; } .text-danger { color: rgb(var(--tblr-red-rgb)) !important; } .text-end { text-align: right !important; }
+  .visually-hidden { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip: rect(0,0,0,0) !important; white-space: nowrap !important; border: 0 !important; }
+  .space-y > * + * { margin-top: 1.25rem; }
+
+  /* Grid */
+  .container-xl, .container-fluid { width: 100%; margin: 0 auto; padding-left: 1rem; padding-right: 1rem; }
+  .container-xl { max-width: 1320px; }
+  @media (min-width: 992px) { .container-xl { padding-left: 1.5rem; padding-right: 1.5rem; } }
+  .row { --gx: 1.5rem; --gy: 0; display: flex; flex-wrap: wrap; margin-top: calc(-1 * var(--gy)); margin-left: calc(-.5 * var(--gx)); margin-right: calc(-.5 * var(--gx)); }
+  .row > * { flex-shrink: 0; width: 100%; max-width: 100%; padding-left: calc(.5 * var(--gx)); padding-right: calc(.5 * var(--gx)); margin-top: var(--gy); }
+  .g-0 { --gx: 0; --gy: 0; } .g-2 { --gx: .5rem; --gy: .5rem; } .row-cards { --gx: 1rem; --gy: 1rem; }
+  @media (min-width: 768px) { .row-cards { --gx: 1.5rem; --gy: 1.5rem; } }
+  .col { flex: 1 0 0%; min-width: 0; } .col-auto { flex: 0 0 auto; width: auto; } .col-12 { flex: 0 0 auto; width: 100%; }
+  @media (min-width: 768px) { .col-md-6 { flex: 0 0 auto; width: 50%; } }
+
+  /* Page shell */
+  .page { min-height: 100%; display: flex; flex-direction: column; }
+  .page-wrapper { flex: 1; min-width: 0; }
+  .page-header { padding: 1.75rem 0 1.25rem; }
+  .page-title { margin: 0; font-size: 1.25rem; font-weight: 700; line-height: 1.4; }
+  .page-body { padding-bottom: 3rem; }
+  .demo-banner { background: rgba(var(--tblr-yellow-rgb), .12); border-bottom: 1px solid rgba(var(--tblr-yellow-rgb), .35); }
+
+  /* Sidebar (navbar-vertical) */
+  .navbar { background: var(--tblr-bg-surface); border-bottom: 1px solid var(--tblr-border-color); }
+  .navbar-vertical > .container-fluid { display: flex; flex-wrap: wrap; align-items: center; padding: .5rem 1rem; }
+  .navbar-brand { display: flex; align-items: baseline; padding: .5rem 0; font-size: 1rem; color: var(--tblr-body-color); margin-right: auto; }
+  .navbar-toggler { order: 2; display: inline-flex; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; border: 1px solid var(--tblr-border-color); border-radius: var(--tblr-radius); background: transparent; cursor: pointer; }
+  .navbar-toggler-icon, .navbar-toggler-icon::before, .navbar-toggler-icon::after { display: block; width: 1.125rem; height: 2px; border-radius: 1px; background: currentColor; }
+  .navbar-toggler-icon { position: relative; } .navbar-toggler-icon::before, .navbar-toggler-icon::after { content: ""; position: absolute; left: 0; }
+  .navbar-toggler-icon::before { top: -6px; } .navbar-toggler-icon::after { top: 6px; }
+  .navbar-collapse { order: 3; flex-basis: 100%; }
+  .collapse:not(.show) { display: none; }
+  .sidebar-heading { padding: .75rem .75rem .375rem; font-size: .75rem; color: var(--tblr-secondary); }
+  .navbar-nav { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+  .navbar-vertical .nav-link { display: flex; align-items: center; gap: .625rem; width: 100%; padding: .5rem .75rem; border: 0; border-radius: var(--tblr-radius); background: transparent; color: var(--tblr-secondary); text-align: start; cursor: pointer; }
+  .navbar-vertical .nav-link:hover { color: var(--tblr-body-color); background: rgba(var(--tblr-secondary-rgb), .08); }
+  .navbar-vertical .nav-link.active { color: var(--tblr-primary); background: rgba(var(--tblr-primary-rgb), .08); font-weight: 500; }
+  .nav-link-icon { display: inline-flex; width: 1.25rem; height: 1.25rem; }
+  .navbar-side { border-top: 1px solid var(--tblr-border-color); margin-top: .75rem; }
+  @media (min-width: 992px) {
+    .navbar-vertical.navbar-expand-lg { position: fixed; top: 0; bottom: 0; left: 0; width: 15rem; border-bottom: 0; border-right: 1px solid var(--tblr-border-color); overflow-y: auto; z-index: 1030; }
+    .navbar-vertical.navbar-expand-lg > .container-fluid { flex-direction: column; flex-wrap: nowrap; align-items: stretch; height: 100%; padding: 1rem .75rem; }
+    .navbar-expand-lg .navbar-toggler { display: none; }
+    .navbar-expand-lg .navbar-brand { padding: .25rem .75rem 1rem; margin: 0; flex-direction: column; gap: .125rem; }
+    .navbar-expand-lg .navbar-brand .ms-2 { margin-left: 0 !important; }
+    .navbar-expand-lg .navbar-collapse { display: flex !important; flex-direction: column; flex: 1; }
+    .navbar-expand-lg .navbar-side { margin-top: auto; }
+    .navbar-vertical.navbar-expand-lg ~ .page-wrapper { margin-left: 15rem; }
+  }
+
+  /* Tabs */
+  .nav { display: flex; flex-wrap: wrap; list-style: none; margin: 0; padding: 0; }
+  .nav-tabs { border-bottom: 1px solid var(--tblr-border-color); }
+  .nav-tabs .nav-link { display: inline-flex; align-items: center; padding: .75rem 1rem; margin-bottom: -1px; border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--tblr-secondary); font-weight: 500; cursor: pointer; }
+  .nav-tabs .nav-link:hover { color: var(--tblr-body-color); }
+  .nav-tabs .nav-link.active { color: var(--tblr-body-color); border-bottom-color: var(--tblr-primary); }
+
+  /* Cards */
+  .card { position: relative; display: flex; flex-direction: column; min-width: 0; background: var(--tblr-bg-surface); border: 1px solid var(--tblr-border-color); border-radius: var(--tblr-radius-lg); box-shadow: var(--tblr-shadow); }
+  .card-header { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; border-bottom: 1px solid var(--tblr-border-color); }
+  .card-title { margin: 0; font-size: 1rem; font-weight: 600; line-height: 1.5rem; }
+  .card-subtitle { margin-top: .125rem; color: var(--tblr-secondary); }
+  .card-actions { margin-left: auto; }
+  .card-body { flex: 1 1 auto; padding: 1.25rem; }
+  .card-footer { padding: 1rem 1.25rem; border-top: 1px solid var(--tblr-border-color); background: var(--tblr-bg-surface-secondary); border-radius: 0 0 var(--tblr-radius-lg) var(--tblr-radius-lg); }
+
+  /* Badges and avatars */
+  .badge { display: inline-flex; align-items: center; gap: .25rem; padding: .25em .5em; font-size: .75rem; font-weight: 500; line-height: 1.2; border-radius: 4px; white-space: nowrap; vertical-align: middle; background: rgba(var(--tblr-secondary-rgb), .12); color: var(--tblr-secondary); }
+  .badge:empty { display: inline-block; width: .5rem; height: .5rem; padding: 0; border-radius: 100rem; vertical-align: baseline; }
+  .badge-pill { border-radius: 100rem; }
+  .badge-outline { background: transparent; border: 1px solid var(--tblr-border-color); }
+  .bg-blue { background: rgb(var(--tblr-blue-rgb)) !important; } .bg-green { background: rgb(var(--tblr-green-rgb)) !important; }
+  .bg-yellow { background: rgb(var(--tblr-yellow-rgb)) !important; } .bg-secondary { background: rgb(var(--tblr-secondary-rgb)) !important; }
+  .text-yellow-fg { color: #fff !important; }
+  .bg-primary-lt { background: rgba(var(--tblr-primary-rgb), .1) !important; color: var(--tblr-primary) !important; }
+  .bg-secondary-lt { background: rgba(var(--tblr-secondary-rgb), .12) !important; color: var(--tblr-secondary) !important; }
+  .bg-green-lt { background: rgba(var(--tblr-green-rgb), .12) !important; color: rgb(var(--tblr-green-rgb)) !important; }
+  .bg-azure-lt { background: rgba(var(--tblr-azure-rgb), .12) !important; color: rgb(var(--tblr-azure-rgb)) !important; }
+  .bg-orange-lt { background: rgba(var(--tblr-orange-rgb), .12) !important; color: rgb(var(--tblr-orange-rgb)) !important; }
+  .bg-purple-lt { background: rgba(var(--tblr-purple-rgb), .12) !important; color: rgb(var(--tblr-purple-rgb)) !important; }
+  .bg-teal-lt { background: rgba(var(--tblr-teal-rgb), .12) !important; color: rgb(var(--tblr-teal-rgb)) !important; }
+  .avatar { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 2.5rem; height: 2.5rem; border-radius: var(--tblr-radius); font-weight: 600; font-size: .875rem; background: rgba(var(--tblr-secondary-rgb), .12); color: var(--tblr-secondary); }
+  .avatar-sm { width: 2rem; height: 2rem; font-size: .75rem; } .avatar-md { width: 3rem; height: 3rem; font-size: 1rem; }
+
+  /* Icons */
+  .icon { width: 1.25rem; height: 1.25rem; stroke-width: 1.5; vertical-align: bottom; flex-shrink: 0; }
+  .icon-inline { width: 1.0625em; height: 1.0625em; vertical-align: -.2em; }
+
+  /* Buttons */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: .375rem; padding: .4375rem 1rem; font-weight: 500; line-height: 1.4286; border: 1px solid var(--tblr-border-color); border-radius: var(--tblr-radius); background: var(--tblr-bg-surface); color: var(--tblr-body-color); box-shadow: 0 1px 1px rgba(24, 36, 51, .04); cursor: pointer; white-space: nowrap; transition: background-color .15s, border-color .15s, color .15s; }
+  .btn:hover { background: var(--tblr-bg-surface-secondary); border-color: rgba(var(--tblr-secondary-rgb), .45); }
+  .btn:disabled { opacity: .55; cursor: not-allowed; }
+  .btn-sm { padding: .25rem .625rem; font-size: .8125rem; }
+  .btn-primary { background: var(--tblr-primary); border-color: var(--tblr-primary); color: #fff; }
+  .btn-primary:hover { background: var(--tblr-primary-hover); border-color: var(--tblr-primary-hover); }
+  .btn-ghost-secondary { background: transparent; border-color: transparent; box-shadow: none; color: var(--tblr-secondary); }
+  .btn-ghost-secondary:hover { background: rgba(var(--tblr-secondary-rgb), .1); border-color: transparent; color: var(--tblr-body-color); }
+  .btn-list { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .btn-close { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; padding: 0; border: 0; border-radius: var(--tblr-radius); background: transparent; color: var(--tblr-secondary); cursor: pointer; }
+  .btn-close::before { content: "\00d7"; font-size: 1.5rem; line-height: 1; }
+  .btn-close:hover { color: var(--tblr-body-color); background: rgba(var(--tblr-secondary-rgb), .1); }
+
+  /* Forms */
+  .form-label { display: block; margin-bottom: .5rem; font-weight: 500; }
+  .form-control { display: block; width: 100%; padding: .5rem .75rem; font: inherit; color: var(--tblr-body-color); background: var(--tblr-bg-surface); border: 1px solid var(--tblr-border-color); border-radius: var(--tblr-radius); transition: border-color .15s, box-shadow .15s; }
+  .form-control::placeholder { color: var(--tblr-secondary); opacity: .8; }
+  .form-control:focus { outline: 0; border-color: rgba(var(--tblr-primary-rgb), .6); box-shadow: 0 0 0 .25rem rgba(var(--tblr-primary-rgb), .18); }
+  .input-icon { position: relative; }
+  .input-icon .form-control { padding-left: 2.5rem; }
+  .input-icon-addon { position: absolute; top: 0; bottom: 0; left: 0; display: flex; align-items: center; justify-content: center; width: 2.5rem; color: var(--tblr-secondary); pointer-events: none; }
+  .opp-search { max-width: 32rem; }
+
+  /* Alerts */
+  .alert { position: relative; padding: .875rem 1rem; border: 1px solid var(--tblr-border-color); border-left-width: 3px; border-radius: var(--tblr-radius); background: var(--tblr-bg-surface); box-shadow: var(--tblr-shadow); }
+  .alert-dismissible { padding-right: 3rem; }
+  .alert-dismissible .btn-close { position: absolute; top: .5rem; right: .5rem; }
+  .alert-icon { width: 1.25rem; height: 1.25rem; }
+  .alert-success { border-left-color: rgb(var(--tblr-green-rgb)); } .alert-success .alert-icon { color: rgb(var(--tblr-green-rgb)); }
+  .alert-info { border-left-color: rgb(var(--tblr-azure-rgb)); } .alert-info .alert-icon { color: rgb(var(--tblr-azure-rgb)); }
+  .alert-warning { border-left-color: rgb(var(--tblr-yellow-rgb)); } .alert-warning .alert-icon { color: rgb(var(--tblr-yellow-rgb)); }
+  .alert-danger { border-left-color: rgb(var(--tblr-red-rgb)); } .alert-danger .alert-icon { color: rgb(var(--tblr-red-rgb)); }
+  #flash:focus { outline: none; }
+
+  /* Empty state */
+  .empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 1rem; text-align: center; border: 1px dashed var(--tblr-border-color); border-radius: var(--tblr-radius-lg); }
+  .card .empty { border: 0; }
+  .empty-title { margin: 0; font-size: 1rem; font-weight: 600; }
+
+  /* Lists */
+  .list-inline { padding: 0; list-style: none; }
+  .list-inline-item { display: inline-block; }
+  .list-inline-dots .list-inline-item + .list-inline-item::before { content: "\00b7"; margin: 0 .5rem; }
+  .list .list-item { display: flex; align-items: center; gap: .375rem; padding: .125rem 0; }
+
+  /* Datagrid */
+  .datagrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: 1.25rem; }
+  .datagrid-title { margin-bottom: .25rem; font-size: .75rem; font-weight: 600; color: var(--tblr-secondary); }
+  .detail-desc { max-width: 65ch; }
+
+  /* Tables */
+  .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .table { width: 100%; border-collapse: collapse; color: var(--tblr-body-color); }
+  .table th, .table td { padding: .75rem 1rem; text-align: left; border-bottom: 1px solid var(--tblr-border-color); }
+  .table thead th { font-size: .75rem; font-weight: 600; color: var(--tblr-secondary); background: var(--tblr-bg-surface-secondary); white-space: nowrap; }
+  .table tbody tr:last-child td { border-bottom: 0; }
+  .table-vcenter td, .table-vcenter th { vertical-align: middle; }
+  .card-table th:first-child, .card-table td:first-child { padding-left: 1.25rem; }
+  .card-table th:last-child, .card-table td:last-child { padding-right: 1.25rem; }
+  @media (max-width: 767.98px) {
+    .table-mobile-md thead { display: none; }
+    .table-mobile-md, .table-mobile-md tbody, .table-mobile-md tr, .table-mobile-md td { display: block; width: 100%; }
+    .table-mobile-md tr { padding: .75rem 1.25rem; border-bottom: 1px solid var(--tblr-border-color); }
+    .table-mobile-md tr:last-child { border-bottom: 0; }
+    .table-mobile-md td, .card-table.table-mobile-md td:first-child, .card-table.table-mobile-md td:last-child { padding: .375rem 0; border: 0; }
+    .table-mobile-md td[data-label]::before { content: attr(data-label); display: block; margin-bottom: .125rem; font-size: .75rem; font-weight: 600; color: var(--tblr-secondary); }
+  }
+
+  /* Modal */
+  .modal { position: fixed; inset: 0; z-index: 1055; display: none; overflow-y: auto; outline: 0; }
+  .modal.show { display: block; }
+  .modal-blur { -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+  .modal-dialog { position: relative; width: auto; max-width: 32rem; margin: 1.75rem auto; padding: 0 .75rem; }
+  .modal-dialog-centered { display: flex; align-items: center; min-height: calc(100% - 3.5rem); }
+  .modal-content { width: 100%; background: var(--tblr-bg-surface); border: 1px solid var(--tblr-border-color); border-radius: var(--tblr-radius-lg); box-shadow: 0 1rem 3rem rgba(24, 36, 51, .18); }
+  .modal-header { display: flex; align-items: center; padding: 1rem 1.25rem; border-bottom: 1px solid var(--tblr-border-color); }
+  .modal-header .btn-close { margin-left: auto; }
+  .modal-title { margin: 0; font-size: 1rem; font-weight: 600; }
+  .modal-body { padding: 1.25rem; }
+  .modal-footer { display: flex; align-items: center; gap: .5rem; padding: .75rem 1.25rem; border-top: 1px solid var(--tblr-border-color); background: var(--tblr-bg-surface-secondary); border-radius: 0 0 var(--tblr-radius-lg) var(--tblr-radius-lg); }
+  .modal-backdrop { position: fixed; inset: 0; z-index: 1050; background: rgba(24, 36, 51, .32); }
+  .modal-open { overflow: hidden; }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Sidebar: Tabler navbar-vertical (simulated role switch) -->
+  <aside class="navbar navbar-vertical navbar-expand-lg" aria-label="Sidebar">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" id="menu-toggle" aria-controls="sidebar-menu" aria-expanded="false" aria-label="Open menu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="navbar-brand navbar-brand-autodark">
+        <span class="fw-bold">IPP</span>
+        <span class="text-secondary fw-normal ms-2 small">Internship Practicum Platform</span>
+      </div>
+      <nav class="collapse navbar-collapse" id="sidebar-menu" aria-label="Switch role">
+        <div class="sidebar-heading">Switch role (simulated)</div>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <button type="button" class="nav-link active" data-role="student" aria-current="page">
+              <span class="nav-link-icon"><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 9l-10 -4l-10 4l10 4l10 -4v6"/><path d="M6 10.6v5.4a6 3 0 0 0 12 0v-5.4"/></svg></span>
+              <span class="nav-link-title">Student</span>
+            </button>
+          </li>
+          <li class="nav-item">
+            <button type="button" class="nav-link" data-role="employer">
+              <span class="nav-link-icon"><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z"/><path d="M8 7v-2a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v2"/><path d="M3 13a20 20 0 0 0 18 0"/></svg></span>
+              <span class="nav-link-title">Employer HR</span>
+            </button>
+          </li>
+          <li class="nav-item">
+            <button type="button" class="nav-link" data-role="admin">
+              <span class="nav-link-icon"><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"/><path d="M9 8h1"/><path d="M9 12h1"/><path d="M9 16h1"/><path d="M14 8h1"/><path d="M14 12h1"/><path d="M14 16h1"/><path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16"/></svg></span>
+              <span class="nav-link-title">University Administrator</span>
+            </button>
+          </li>
+          <li class="nav-item">
+            <button type="button" class="nav-link" data-role="faculty">
+              <span class="nav-link-icon"><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2"/><path d="M9 5a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z"/><path d="M9 14l2 2l4 -4"/></svg></span>
+              <span class="nav-link-title">Faculty</span>
+            </button>
+          </li>
+        </ul>
+        <div class="navbar-side">
+          <div class="px-3 py-3 d-flex align-items-center">
+            <span class="avatar avatar-sm bg-primary-lt me-2" aria-hidden="true">AL</span>
+            <div class="small">
+              <div class="fw-medium">Alex Lee</div>
+              <div class="text-secondary">STU-001, demo student</div>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </aside>
+
+  <div class="page-wrapper">
+
+    <!-- Persistent demo banner -->
+    <div class="demo-banner" role="region" aria-label="Demo notice">
+      <div class="container-xl d-flex flex-wrap align-items-center gap-2 py-2">
+        <span class="badge bg-yellow text-yellow-fg">Demo</span>
+        <span class="flex-fill small">Synthetic data, stored in this browser only. Role switching is simulated.</span>
+        <span class="small text-danger" id="storage-warning" hidden>This browser blocked storage, so changes will be lost on reload.</span>
+        <button type="button" class="btn btn-sm" id="reset-demo">Reset demo</button>
+      </div>
+    </div>
+
+    <div class="page-header d-print-none">
+      <div class="container-xl">
+        <div class="row g-2 align-items-center">
+          <div class="col">
+            <h1 class="page-title" id="page-title">Find and apply for internships</h1>
+            <div class="text-secondary mt-1" id="page-subtitle">Viewing as Alex Lee (STU-001), the demo student.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-body">
+      <div class="container-xl">
+
+        <div id="flash" tabindex="-1"></div>
+
+        <!-- ============ STUDENT VIEW (Group 4) ============ -->
+        <section id="view-student" aria-labelledby="page-title">
+          <ul class="nav nav-tabs mb-4" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button type="button" class="nav-link active" id="tab-opps" role="tab" aria-controls="panel-opps" aria-selected="true" data-tab="opps">Opportunities</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button type="button" class="nav-link" id="tab-apps" role="tab" aria-controls="panel-apps" aria-selected="false" data-tab="apps">My applications <span class="badge bg-secondary-lt ms-2" id="apps-count">0</span></button>
+            </li>
+          </ul>
+
+          <!-- Opportunities tab -->
+          <div id="panel-opps" role="tabpanel" aria-labelledby="tab-opps">
+            <div id="opps-list-view">
+              <div class="mb-3 opp-search" id="search-wrap">
+                <label class="form-label" for="opp-search">Search opportunities</label>
+                <div class="input-icon">
+                  <span class="input-icon-addon"><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg></span>
+                  <input type="search" class="form-control" id="opp-search" placeholder="Search by title or organization" autocomplete="off">
+                </div>
+              </div>
+              <p class="text-secondary mb-3" id="opp-count" aria-live="polite"></p>
+              <div class="row row-cards" id="opp-grid"></div>
+              <div class="empty" id="opp-empty" hidden>
+                <p class="empty-title" id="opp-empty-text"></p>
+              </div>
+            </div>
+            <div id="opp-detail-view" hidden></div>
+          </div>
+
+          <!-- My applications tab -->
+          <div id="panel-apps" role="tabpanel" aria-labelledby="tab-apps" hidden>
+            <div class="card">
+              <div class="card-header">
+                <h2 class="card-title">My applications</h2>
+              </div>
+              <div class="table-responsive" id="apps-table-wrap" tabindex="0" aria-label="My applications table">
+                <table class="table table-vcenter table-mobile-md card-table">
+                  <thead>
+                    <tr>
+                      <th>Application ID</th>
+                      <th>Opportunity</th>
+                      <th>Organization</th>
+                      <th>Submitted</th>
+                      <th>Application status</th>
+                      <th>Placement status</th>
+                      <th>Next step</th>
+                    </tr>
+                  </thead>
+                  <tbody id="apps-body"></tbody>
+                </table>
+              </div>
+              <div class="card-body" id="apps-empty" hidden>
+                <div class="empty py-4">
+                  <p class="empty-title">You haven’t applied to any opportunities yet.</p>
+                </div>
+              </div>
+              <div class="card-footer">
+                <p class="m-0 text-secondary">An application is not a placement. A placement is only confirmed by the university.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ STAND-IN VIEWS (other groups) ============ -->
+        <section id="view-employer" aria-labelledby="page-title" hidden>
+          <div class="card">
+            <div class="card-header"><h2 class="card-title">Opportunities and their approval status</h2></div>
+            <div class="table-responsive" tabindex="0" aria-label="Employer opportunities table">
+              <table class="table table-vcenter table-mobile-md card-table">
+                <thead><tr><th>Opportunity ID</th><th>Title</th><th>Organization</th><th>Approval status</th></tr></thead>
+                <tbody id="employer-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section id="view-admin" aria-labelledby="page-title" hidden>
+          <div class="card">
+            <div class="card-header"><h2 class="card-title">Opportunities waiting for approval</h2></div>
+            <div class="table-responsive" tabindex="0" aria-label="Approval table">
+              <table class="table table-vcenter table-mobile-md card-table">
+                <thead><tr><th>Opportunity ID</th><th>Title</th><th>Organization</th><th>Approval status</th><th class="w-1"><span class="visually-hidden">Actions</span></th></tr></thead>
+                <tbody id="admin-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section id="view-faculty" aria-labelledby="page-title" hidden>
+          <div class="card">
+            <div class="card-header"><h2 class="card-title">Student applications</h2></div>
+            <div class="table-responsive" tabindex="0" aria-label="Faculty applications table">
+              <table class="table table-vcenter table-mobile-md card-table">
+                <thead><tr><th>Application ID</th><th>Student</th><th>Opportunity</th><th>Submitted</th><th>Application status</th><th>Placement status</th></tr></thead>
+                <tbody id="faculty-body"></tbody>
+              </table>
+            </div>
+            <div class="card-body" id="faculty-empty" hidden>
+              <div class="empty py-4"><p class="empty-title">No applications have been submitted yet.</p></div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Confirmation dialog (Tabler modal) -->
+<div class="modal modal-blur" id="apply-modal" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="apply-modal-title" aria-describedby="apply-modal-desc" hidden>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="apply-modal-title">Submit application</h2>
+        <button type="button" class="btn-close" data-action="modal-cancel" aria-label="Cancel"></button>
+      </div>
+      <div class="modal-body" id="apply-modal-desc">
+        <p class="mb-2">Submit your application to <strong id="modal-title-text"></strong> at <strong id="modal-org-text"></strong>?</p>
+        <p class="mb-0 text-secondary">Submitting does not approve a placement.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn me-auto" id="modal-cancel" data-action="modal-cancel">Cancel</button>
+        <button type="button" class="btn btn-primary" id="modal-submit" data-action="modal-submit">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---------- Theme: follow the viewer's light/dark setting ---------- */
+  var root = document.documentElement;
+  var darkQuery = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  function applyTheme() {
+    var t = root.getAttribute('data-theme');
+    if (t !== 'light' && t !== 'dark') t = darkQuery && darkQuery.matches ? 'dark' : 'light';
+    root.setAttribute('data-bs-theme', t);
+  }
+  applyTheme();
+  if (darkQuery && darkQuery.addEventListener) darkQuery.addEventListener('change', applyTheme);
+  new MutationObserver(applyTheme).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+
+  /* ---------- Shared records (synthetic seed data) ---------- */
+  var STORE_KEY = 'ipp-shared-records-v1';
+  var DEMO_STUDENT = 'STU-001';
+  var STATUS_SUBMITTED = 'Submitted';
+  var PLACEMENT_NOT_PLACED = 'Not placed';
+  var INACTIVE_STATUSES = ['Withdrawn', 'Rejected'];
+  var MSG_DUPLICATE = 'You have already applied to this opportunity.';
+
+  var SEED = {
+    students: [{ student_id: 'STU-001', full_name: 'Alex Lee' }],
+    employers: [
+      { employer_id: 'EMP-001', organization_name: 'Evergreen Labs' },
+      { employer_id: 'EMP-002', organization_name: 'Northwind Analytics' },
+      { employer_id: 'EMP-003', organization_name: 'Harbor Robotics' },
+      { employer_id: 'EMP-004', organization_name: 'Bluefin Health' }
+    ],
+    opportunities: [
+      { opportunity_id: 'OPP-001', employer_id: 'EMP-002', title: 'Data Analyst Intern', location: 'Abu Dhabi', work_mode: 'Hybrid', duration: '10 weeks', approval_status: 'Approved',
+        description: 'Clean and analyse customer survey data, build weekly dashboards for the operations team, and present one finding to the analytics lead at the end of the internship.' },
+      { opportunity_id: 'OPP-002', employer_id: 'EMP-003', title: 'Machine Learning Intern', location: 'Dubai', work_mode: 'On-site', duration: '12 weeks', approval_status: 'Approved',
+        description: 'Help train and evaluate vision models for warehouse robots. You will label data, run experiments, and write short reports comparing model results.' },
+      { opportunity_id: 'OPP-003', employer_id: 'EMP-001', title: 'UX Research Intern', location: 'Abu Dhabi', work_mode: 'Remote', duration: '8 weeks', approval_status: 'Pending Review',
+        description: 'Plan and run user interviews for a new booking app, turn notes into clear findings, and help the design team decide what to build next.' },
+      { opportunity_id: 'OPP-004', employer_id: 'EMP-004', title: 'Backend Engineering Intern', location: 'Abu Dhabi', work_mode: 'On-site', duration: '12 weeks', approval_status: 'Pending Review',
+        description: 'Build and test API endpoints for a clinic scheduling system, with code reviews from a senior engineer each week.' },
+      { opportunity_id: 'OPP-005', employer_id: 'EMP-002', title: 'Cloud Operations Intern', location: 'Dubai', work_mode: 'Hybrid', duration: '8 weeks', approval_status: 'Approved',
+        description: 'Monitor cloud services, write runbooks for common alerts, and help automate routine checks for the platform team.' }
+    ],
+    applications: [],
+    last_application_number: 0
+  };
+
+  var storageOk = true;
+  var memoryCopy = null;
+
+  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+  function isValid(d) {
+    return d && Array.isArray(d.students) && Array.isArray(d.employers) && Array.isArray(d.opportunities) && Array.isArray(d.applications);
+  }
+  function load() {
+    if (!storageOk) return clone(memoryCopy || SEED);
+    try {
+      var raw = localStorage.getItem(STORE_KEY);
+      if (raw) {
+        var d = JSON.parse(raw);
+        if (isValid(d)) return d;
+      }
+      var seeded = clone(SEED);
+      save(seeded);
+      return seeded;
+    } catch (e) {
+      storageOk = false;
+      showStorageWarning();
+      return clone(memoryCopy || SEED);
+    }
+  }
+  function save(d) {
+    memoryCopy = clone(d);
+    if (!storageOk) return;
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(d)); }
+    catch (e) { storageOk = false; showStorageWarning(); }
+  }
+  function showStorageWarning() {
+    var el = document.getElementById('storage-warning');
+    if (el) el.hidden = false;
+  }
+
+  /* ---------- Helpers ---------- */
+  function $(id) { return document.getElementById(id); }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function normalize(s) { return String(s || '').toLowerCase().replace(/\s+/g, ' ').trim(); }
+  function orgName(d, employerId) {
+    for (var i = 0; i < d.employers.length; i++) if (d.employers[i].employer_id === employerId) return d.employers[i].organization_name;
+    return 'Unknown organization';
+  }
+  function findOpp(d, id) {
+    for (var i = 0; i < d.opportunities.length; i++) if (d.opportunities[i].opportunity_id === id) return d.opportunities[i];
+    return null;
+  }
+  function studentName(d, id) {
+    for (var i = 0; i < d.students.length; i++) if (d.students[i].student_id === id) return d.students[i].full_name;
+    return '';
+  }
+  function hasActiveApplication(d, studentId, oppId) {
+    return d.applications.some(function (a) {
+      return a.student_id === studentId && a.opportunity_id === oppId && INACTIVE_STATUSES.indexOf(a.application_status) === -1;
+    });
+  }
+  function formatDate(iso) {
+    var dt = new Date(iso);
+    if (isNaN(dt)) return esc(iso);
+    return dt.toLocaleString(undefined, { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  }
+  function initials(name) {
+    return name.split(/\s+/).filter(Boolean).slice(0, 2).map(function (w) { return w.charAt(0).toUpperCase(); }).join('');
+  }
+  var TONES = ['bg-green-lt', 'bg-azure-lt', 'bg-orange-lt', 'bg-purple-lt', 'bg-teal-lt'];
+  function tone(employerId) {
+    var n = parseInt(String(employerId).replace(/\D/g, ''), 10) || 0;
+    return TONES[n % TONES.length];
+  }
+  function nextStep(status) {
+    return status === STATUS_SUBMITTED ? 'Wait for the employer’s review.' : '';
+  }
+  function approvalBadge(status) {
+    var cls = status === 'Approved' ? 'bg-green' : 'bg-yellow';
+    return '<span class="badge ' + cls + ' me-1"></span> ' + esc(status);
+  }
+  function appStatusBadge(status) {
+    return '<span class="badge bg-blue me-1"></span> ' + esc(status);
+  }
+  function placementBadge(status) {
+    return '<span class="badge bg-secondary me-1"></span> ' + esc(status);
+  }
+
+  var ICONS = {
+    org: '<path d="M8 9l5 5v7h-5v-4m0 4h-5v-7l5 -5m1 1v-6a1 1 0 0 1 1 -1h10a1 1 0 0 1 1 1v17h-8"/><path d="M13 7v.01"/><path d="M17 7v.01"/><path d="M17 11v.01"/><path d="M17 15v.01"/>',
+    pin: '<path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z"/>',
+    mode: '<path d="M3 19h18"/><path d="M5 7a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v8a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1z"/>',
+    clock: '<path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 7v5l3 3"/>',
+    check: '<path d="M5 12l5 5l10 -10"/>',
+    info: '<path d="M3 12a9 9 0 1 0 9 -9a9 9 0 0 0 -9 9"/><path d="M12 9h.01"/><path d="M11 12h1v4h1"/>',
+    back: '<path d="M5 12h14"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/>'
+  };
+  function icon(name, cls) {
+    return '<svg xmlns="http://www.w3.org/2000/svg" class="icon ' + (cls || 'icon-inline') + '" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICONS[name] + '</svg>';
+  }
+
+  /* ---------- Flash messages ---------- */
+  function flash(type, text, focus) {
+    var role = type === 'success' || type === 'info' ? 'status' : 'alert';
+    var ic = type === 'success' ? 'check' : 'info';
+    $('flash').innerHTML =
+      '<div class="alert alert-' + type + ' alert-dismissible mb-4" role="' + role + '">' +
+        '<div class="d-flex"><div class="me-2">' + icon(ic, 'alert-icon') + '</div><div>' + esc(text) + '</div></div>' +
+        '<button type="button" class="btn-close" data-action="dismiss-flash" aria-label="Dismiss message"></button>' +
+      '</div>';
+    if (focus) $('flash').focus();
+  }
+  function clearFlash() { $('flash').innerHTML = ''; }
+
+  /* ---------- State ---------- */
+  var state = { role: 'student', tab: 'opps', detailId: null, query: '', lastDetailTrigger: null };
+
+  var ROLE_META = {
+    student: { title: 'Find and apply for internships', subtitle: 'Viewing as Alex Lee (STU-001), the demo student.' },
+    employer: { title: 'Employer HR', subtitle: 'Stand-in so the role switch works. The real view is built by Group 2.' },
+    admin: { title: 'University Administrator', subtitle: 'Stand-in for Group 3’s approval step. Approve an opportunity to make it visible to students.' },
+    faculty: { title: 'Faculty', subtitle: 'Stand-in that reads the shared Application records. Owner to be confirmed.' }
+  };
+
+  /* ---------- Student: Opportunities list ---------- */
+  function renderOpps() {
+    var d = load();
+    var approved = d.opportunities.filter(function (o) { return o.approval_status === 'Approved'; });
+    var grid = $('opp-grid'), empty = $('opp-empty'), emptyText = $('opp-empty-text'), count = $('opp-count');
+
+    if (approved.length === 0) {
+      $('search-wrap').hidden = true;
+      grid.innerHTML = '';
+      count.textContent = '';
+      emptyText.textContent = 'No approved opportunities yet. Please check back later.';
+      empty.hidden = false;
+      return;
+    }
+    $('search-wrap').hidden = false;
+
+    var q = normalize(state.query);
+    var shown = approved.filter(function (o) {
+      if (!q) return true;
+      return normalize(o.title).indexOf(q) !== -1 || normalize(orgName(d, o.employer_id)).indexOf(q) !== -1;
+    });
+
+    if (shown.length === 0) {
+      grid.innerHTML = '';
+      count.textContent = '';
+      emptyText.textContent = 'No opportunities match your search.';
+      empty.hidden = false;
+      return;
+    }
+    empty.hidden = true;
+    count.textContent = 'Showing ' + shown.length + ' approved ' + (shown.length === 1 ? 'opportunity' : 'opportunities') + '.';
+
+    grid.innerHTML = shown.map(function (o) {
+      var org = orgName(d, o.employer_id);
+      var items = [
+        ['pin', 'Location', o.location],
+        ['mode', 'Work mode', o.work_mode],
+        ['clock', 'Duration', o.duration]
+      ];
+      var inline = items.map(function (it) {
+        return '<div class="list-inline-item">' + icon(it[0]) + ' <span class="visually-hidden">' + it[1] + ': </span>' + esc(it[2]) + '</div>';
+      }).join('');
+      var stacked = items.map(function (it) {
+        return '<div class="list-item">' + icon(it[0]) + ' <span class="visually-hidden">' + it[1] + ': </span>' + esc(it[2]) + '</div>';
+      }).join('');
+      return '' +
+        '<div class="col-12 col-md-6">' +
+          '<div class="card h-100">' +
+            '<div class="row g-0 h-100">' +
+              '<div class="col-auto"><div class="card-body"><span class="avatar avatar-md ' + tone(o.employer_id) + '" aria-hidden="true">' + esc(initials(org)) + '</span></div></div>' +
+              '<div class="col">' +
+                '<div class="card-body ps-0 d-flex flex-column h-100">' +
+                  '<div class="row">' +
+                    '<div class="col"><h2 class="h3 mb-0">' + esc(o.title) + '</h2><div class="text-secondary mt-1">' + icon('org') + ' <span class="visually-hidden">Organization: </span>' + esc(org) + '</div></div>' +
+                    '<div class="col-auto"><span class="badge badge-outline text-secondary fw-normal badge-pill"><span class="visually-hidden">Opportunity ID: </span>' + esc(o.opportunity_id) + '</span></div>' +
+                  '</div>' +
+                  '<div class="mt-2 list-inline list-inline-dots mb-0 text-secondary d-sm-block d-none">' + inline + '</div>' +
+                  '<div class="mt-2 list mb-0 text-secondary d-block d-sm-none">' + stacked + '</div>' +
+                  '<div class="mt-auto pt-3">' +
+                    '<button type="button" class="btn" data-action="details" data-id="' + esc(o.opportunity_id) + '" aria-label="View details for ' + esc(o.title) + '">View details</button>' +
+                  '</div>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+    }).join('');
+  }
+
+  /* ---------- Student: details ---------- */
+  function renderDetail(focusHeading) {
+    var d = load();
+    var o = findOpp(d, state.detailId);
+    if (!o || o.approval_status !== 'Approved') { closeDetail(false); return; }
+    var org = orgName(d, o.employer_id);
+    var applied = hasActiveApplication(d, DEMO_STUDENT, o.opportunity_id);
+
+    var action = applied
+      ? '<button type="button" class="btn" disabled>Already applied</button>'
+      : '<button type="button" class="btn btn-primary" data-action="apply" data-id="' + esc(o.opportunity_id) + '">Apply</button>';
+
+    $('opp-detail-view').innerHTML =
+      '<div class="card">' +
+        '<div class="card-header">' +
+          '<div>' +
+            '<h2 class="card-title" id="detail-heading" tabindex="-1">' + esc(o.title) + '</h2>' +
+            '<p class="card-subtitle mb-0">' + esc(org) + '</p>' +
+          '</div>' +
+          '<div class="card-actions"><span class="badge badge-outline text-secondary fw-normal badge-pill"><span class="visually-hidden">Opportunity ID: </span>' + esc(o.opportunity_id) + '</span></div>' +
+        '</div>' +
+        '<div class="card-body">' +
+          '<div class="space-y">' +
+            '<div><h3 class="h4">About this internship</h3><p class="detail-desc mb-0">' + esc(o.description) + '</p></div>' +
+            '<div class="datagrid">' +
+              '<div class="datagrid-item"><div class="datagrid-title">Location</div><div class="datagrid-content">' + esc(o.location) + '</div></div>' +
+              '<div class="datagrid-item"><div class="datagrid-title">Work mode</div><div class="datagrid-content">' + esc(o.work_mode) + '</div></div>' +
+              '<div class="datagrid-item"><div class="datagrid-title">Duration</div><div class="datagrid-content">' + esc(o.duration) + '</div></div>' +
+              '<div class="datagrid-item"><div class="datagrid-title">Organization</div><div class="datagrid-content">' + esc(org) + '</div></div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="card-footer">' +
+          '<div class="btn-list justify-content-between">' +
+            '<button type="button" class="btn btn-ghost-secondary" data-action="back">' + icon('back', '') + ' Back</button>' +
+            action +
+          '</div>' +
+          (applied ? '<p class="text-secondary text-end mt-2 mb-0" id="already-msg">' + MSG_DUPLICATE + '</p>' : '') +
+        '</div>' +
+      '</div>';
+
+    $('opps-list-view').hidden = true;
+    $('opp-detail-view').hidden = false;
+    if (focusHeading) $('detail-heading').focus();
+  }
+
+  function openDetail(id, trigger) {
+    state.detailId = id;
+    state.lastDetailTrigger = id;
+    renderDetail(true);
+  }
+  function closeDetail(restoreFocus) {
+    state.detailId = null;
+    $('opp-detail-view').hidden = true;
+    $('opp-detail-view').innerHTML = '';
+    $('opps-list-view').hidden = false;
+    renderOpps();
+    if (restoreFocus && state.lastDetailTrigger) {
+      var btn = document.querySelector('#opp-grid [data-id="' + state.lastDetailTrigger + '"]');
+      if (btn) btn.focus();
+    }
+  }
+
+  /* ---------- Student: apply ---------- */
+  function submitApplication(oppId) {
+    var d = load();
+    var o = findOpp(d, oppId);
+    if (!o || o.approval_status !== 'Approved') {
+      flash('danger', 'This opportunity is not open for applications.', true);
+      return null;
+    }
+    if (hasActiveApplication(d, DEMO_STUDENT, oppId)) {
+      flash('warning', MSG_DUPLICATE, true);
+      return null;
+    }
+    var highest = d.last_application_number || 0;
+    d.applications.forEach(function (a) {
+      var n = parseInt(String(a.application_id).replace(/^APP-/, ''), 10);
+      if (n > highest) highest = n;
+    });
+    var num = highest + 1;
+    var app = {
+      application_id: 'APP-' + String(num).padStart(3, '0'),
+      student_id: DEMO_STUDENT,
+      opportunity_id: oppId,
+      application_status: STATUS_SUBMITTED,
+      placement_status: PLACEMENT_NOT_PLACED,
+      submitted_at: new Date().toISOString()
+    };
+    d.applications.push(app);
+    d.last_application_number = num;
+    save(d);
+    return app;
+  }
+
+  /* ---------- Modal ---------- */
+  var modal = $('apply-modal');
+  var backdrop = null, modalFocusReturn = null, pendingOpp = null;
+
+  function openModal(oppId) {
+    var d = load();
+    var o = findOpp(d, oppId);
+    if (!o) return;
+    if (hasActiveApplication(d, DEMO_STUDENT, oppId)) {
+      flash('warning', MSG_DUPLICATE, true);
+      renderDetail(false);
+      return;
+    }
+    pendingOpp = oppId;
+    $('modal-title-text').textContent = o.title;
+    $('modal-org-text').textContent = orgName(d, o.employer_id);
+    modalFocusReturn = document.activeElement;
+    modal.hidden = false;
+    modal.classList.add('show');
+    backdrop = document.createElement('div');
+    backdrop.className = 'modal-backdrop show';
+    document.body.appendChild(backdrop);
+    document.body.classList.add('modal-open');
+    $('modal-cancel').focus();
+  }
+  function closeModal(returnFocus) {
+    modal.classList.remove('show');
+    modal.hidden = true;
+    if (backdrop) { backdrop.remove(); backdrop = null; }
+    document.body.classList.remove('modal-open');
+    pendingOpp = null;
+    if (returnFocus && modalFocusReturn && document.contains(modalFocusReturn)) modalFocusReturn.focus();
+    modalFocusReturn = null;
+  }
+  function confirmModal() {
+    var oppId = pendingOpp;
+    closeModal(false);
+    var app = submitApplication(oppId);
+    if (app) {
+      flash('success', 'Application ' + app.application_id + ' submitted. Status: ' + app.application_status +
+        '. Placement: ' + app.placement_status + '. Next step: wait for the employer’s review.', true);
+    }
+    renderDetail(false);
+    renderAppsCount();
+  }
+  modal.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { e.preventDefault(); closeModal(true); return; }
+    if (e.key === 'Tab') {
+      var f = modal.querySelectorAll('button:not([disabled])');
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+  modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(true); });
+
+  /* ---------- Student: My applications ---------- */
+  function myApps(d) {
+    return d.applications
+      .filter(function (a) { return a.student_id === DEMO_STUDENT; })
+      .sort(function (a, b) {
+        if (a.submitted_at === b.submitted_at) return a.application_id < b.application_id ? 1 : -1;
+        return a.submitted_at < b.submitted_at ? 1 : -1;
+      });
+  }
+  function renderAppsCount() {
+    $('apps-count').textContent = myApps(load()).length;
+  }
+  function renderApps() {
+    var d = load();
+    var list = myApps(d);
+    renderAppsCount();
+    if (list.length === 0) {
+      $('apps-body').innerHTML = '';
+      $('apps-table-wrap').hidden = true;
+      $('apps-empty').hidden = false;
+      return;
+    }
+    $('apps-table-wrap').hidden = false;
+    $('apps-empty').hidden = true;
+    $('apps-body').innerHTML = list.map(function (a) {
+      var o = findOpp(d, a.opportunity_id) || {};
+      return '<tr>' +
+        '<td data-label="Application ID"><span class="fw-medium">' + esc(a.application_id) + '</span></td>' +
+        '<td data-label="Opportunity"><div>' + esc(o.title || 'Unknown opportunity') + '</div><div class="text-secondary small">' + esc(a.opportunity_id) + '</div></td>' +
+        '<td data-label="Organization" class="text-secondary">' + esc(orgName(d, o.employer_id)) + '</td>' +
+        '<td data-label="Submitted" class="text-secondary">' + formatDate(a.submitted_at) + '</td>' +
+        '<td data-label="Application status">' + appStatusBadge(a.application_status) + '</td>' +
+        '<td data-label="Placement status">' + placementBadge(a.placement_status) + '</td>' +
+        '<td data-label="Next step">' + esc(nextStep(a.application_status)) + '</td>' +
+      '</tr>';
+    }).join('');
+  }
+
+  /* ---------- Stand-in views ---------- */
+  function renderEmployer() {
+    var d = load();
+    $('employer-body').innerHTML = d.opportunities.map(function (o) {
+      return '<tr>' +
+        '<td data-label="Opportunity ID">' + esc(o.opportunity_id) + '</td>' +
+        '<td data-label="Title">' + esc(o.title) + '</td>' +
+        '<td data-label="Organization" class="text-secondary">' + esc(orgName(d, o.employer_id)) + '</td>' +
+        '<td data-label="Approval status">' + approvalBadge(o.approval_status) + '</td>' +
+      '</tr>';
+    }).join('');
+  }
+  function renderAdmin() {
+    var d = load();
+    $('admin-body').innerHTML = d.opportunities.map(function (o) {
+      var btn = o.approval_status === 'Pending Review'
+        ? '<button type="button" class="btn btn-sm" data-action="approve" data-id="' + esc(o.opportunity_id) + '" aria-label="Approve ' + esc(o.opportunity_id) + '">Approve</button>'
+        : '';
+      return '<tr>' +
+        '<td data-label="Opportunity ID">' + esc(o.opportunity_id) + '</td>' +
+        '<td data-label="Title">' + esc(o.title) + '</td>' +
+        '<td data-label="Organization" class="text-secondary">' + esc(orgName(d, o.employer_id)) + '</td>' +
+        '<td data-label="Approval status">' + approvalBadge(o.approval_status) + '</td>' +
+        '<td>' + btn + '</td>' +
+      '</tr>';
+    }).join('');
+  }
+  function renderFaculty() {
+    var d = load();
+    var list = d.applications.slice().sort(function (a, b) { return a.application_id < b.application_id ? -1 : 1; });
+    $('faculty-empty').hidden = list.length > 0;
+    $('faculty-body').closest('.table-responsive').hidden = list.length === 0;
+    $('faculty-body').innerHTML = list.map(function (a) {
+      var o = findOpp(d, a.opportunity_id) || {};
+      return '<tr>' +
+        '<td data-label="Application ID"><span class="fw-medium">' + esc(a.application_id) + '</span></td>' +
+        '<td data-label="Student">' + esc(a.student_id) + '<div class="text-secondary small">' + esc(studentName(d, a.student_id)) + '</div></td>' +
+        '<td data-label="Opportunity">' + esc(a.opportunity_id) + '<div class="text-secondary small">' + esc((o.title || '') + (o.employer_id ? ', ' + orgName(d, o.employer_id) : '')) + '</div></td>' +
+        '<td data-label="Submitted" class="text-secondary">' + formatDate(a.submitted_at) + '</td>' +
+        '<td data-label="Application status">' + appStatusBadge(a.application_status) + '</td>' +
+        '<td data-label="Placement status">' + placementBadge(a.placement_status) + '</td>' +
+      '</tr>';
+    }).join('');
+  }
+
+  /* ---------- Navigation ---------- */
+  function setTab(tab) {
+    state.tab = tab;
+    ['opps', 'apps'].forEach(function (t) {
+      var btn = $('tab-' + t), panel = $('panel-' + t);
+      var on = t === tab;
+      btn.classList.toggle('active', on);
+      btn.setAttribute('aria-selected', on ? 'true' : 'false');
+      panel.hidden = !on;
+    });
+    if (tab === 'apps') renderApps();
+    else if (state.detailId) renderDetail(false);
+    else renderOpps();
+  }
+
+  function setRole(role) {
+    state.role = role;
+    clearFlash();
+    document.querySelectorAll('[data-role]').forEach(function (b) {
+      var on = b.getAttribute('data-role') === role;
+      b.classList.toggle('active', on);
+      if (on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+    });
+    ['student', 'employer', 'admin', 'faculty'].forEach(function (r) { $('view-' + r).hidden = r !== role; });
+    $('page-title').textContent = ROLE_META[role].title;
+    $('page-subtitle').textContent = ROLE_META[role].subtitle;
+    renderCurrent();
+    var menu = $('sidebar-menu');
+    if (menu.classList.contains('show')) toggleMenu(false);
+  }
+
+  function renderCurrent() {
+    if (state.role === 'student') {
+      renderAppsCount();
+      setTab(state.tab);
+    } else if (state.role === 'employer') renderEmployer();
+    else if (state.role === 'admin') renderAdmin();
+    else renderFaculty();
+  }
+
+  function toggleMenu(force) {
+    var menu = $('sidebar-menu');
+    var open = typeof force === 'boolean' ? force : !menu.classList.contains('show');
+    menu.classList.toggle('show', open);
+    $('menu-toggle').setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  /* ---------- Events ---------- */
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('button');
+    if (!t) return;
+    if (t.id === 'menu-toggle') { toggleMenu(); return; }
+    if (t.id === 'reset-demo') {
+      closeModal(false);
+      save(clone(SEED));
+      state.tab = 'opps'; state.detailId = null; state.query = '';
+      $('opp-search').value = '';
+      renderCurrent();
+      flash('info', 'Demo data reset to the seed records.', false);
+      return;
+    }
+    if (t.hasAttribute('data-role')) { setRole(t.getAttribute('data-role')); return; }
+    if (t.hasAttribute('data-tab')) { setTab(t.getAttribute('data-tab')); return; }
+    switch (t.getAttribute('data-action')) {
+      case 'details': clearFlash(); openDetail(t.getAttribute('data-id'), t); break;
+      case 'back': closeDetail(true); break;
+      case 'apply': openModal(t.getAttribute('data-id')); break;
+      case 'modal-cancel': closeModal(true); break;
+      case 'modal-submit': confirmModal(); break;
+      case 'dismiss-flash': clearFlash(); break;
+      case 'approve': {
+        var d = load();
+        var o = findOpp(d, t.getAttribute('data-id'));
+        if (o && o.approval_status === 'Pending Review') {
+          o.approval_status = 'Approved';
+          save(d);
+          renderAdmin();
+          flash('success', o.opportunity_id + ' is now Approved and visible to students.', true);
+        }
+        break;
+      }
+    }
+  });
+
+  $('opp-search').addEventListener('input', function (e) {
+    state.query = e.target.value;
+    renderOpps();
+  });
+
+  window.addEventListener('storage', function (e) {
+    if (e.key === STORE_KEY) renderCurrent();
+  });
+
+  /* ---------- Start ---------- */
+  load();
+  renderCurrent();
+})();
+</script>
+</body>
+</html>
