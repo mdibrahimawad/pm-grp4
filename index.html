@@ -3,20 +3,44 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>IPP Student view: Discovery and Application Tracking</title>
+<title>IPP – Internship Practicum Platform (Group 4 prototype)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-<!-- Outside claude.ai you can add Tabler 1.4.0 here: https://cdn.jsdelivr.net/npm/@tabler/core@1.4.0/dist/css/tabler.min.css -->
-<style>
+<!-- Tabler 1.4.0 (MIT) from the CDN, as the spec requires -->
+<link id="tabler-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.4.0/dist/css/tabler.min.css">
+<script>
+  /* If the CDN stylesheet is blocked (for example inside claude.ai), switch on the built-in Tabler-style copy below. */
+  (function () {
+    var link = document.getElementById('tabler-css');
+    var done = false;
+    function tablerApplied() {
+      if (!document.body) return false;
+      var probe = document.createElement('span');
+      probe.className = 'visually-hidden';
+      document.body.appendChild(probe);
+      var ok = getComputedStyle(probe).position === 'absolute';
+      probe.remove();
+      return ok;
+    }
+    function check(force) {
+      if (done) return;
+      var s = document.getElementById('tabler-fallback');
+      if (!s) { document.addEventListener('DOMContentLoaded', function () { check(force); }, { once: true }); return; }
+      if (force || !tablerApplied()) { s.media = 'all'; done = true; }
+    }
+    link.addEventListener('error', function () { check(true); });
+    link.addEventListener('load', function () { check(false); });
+    window.addEventListener('load', function () { check(false); });
+  })();
+</script>
+<style id="tabler-fallback" media="not all">
   /* Tabler 1.4-style stylesheet, inlined because published pages block external CSS.
      Class names match Tabler, so the real tabler.min.css can replace this block later. */
   :root {
     box-sizing: border-box;
-    padding-top: env(safe-area-inset-top, 0px);
-    padding-bottom: env(safe-area-inset-bottom, 0px);
     --tblr-font-sans-serif: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    --tblr-primary: #066fd1; --tblr-primary-rgb: 6, 111, 209; --tblr-primary-hover: #0560b8;
+    
     --tblr-blue-rgb: 6, 111, 209; --tblr-azure-rgb: 66, 153, 225; --tblr-green-rgb: 47, 179, 68;
     --tblr-orange-rgb: 247, 103, 7; --tblr-purple-rgb: 174, 62, 201; --tblr-teal-rgb: 12, 166, 120;
     --tblr-yellow-rgb: 245, 159, 0; --tblr-red-rgb: 214, 57, 57; --tblr-secondary-rgb: 102, 115, 130;
@@ -28,14 +52,14 @@
   [data-bs-theme="dark"], :root[data-theme="dark"] {
     --tblr-body-bg: #151f2c; --tblr-bg-surface: #182433; --tblr-bg-surface-secondary: #1b2a3c;
     --tblr-body-color: #dce1e7; --tblr-secondary: #8a99ab; --tblr-border-color: #2a3c52;
-    --tblr-primary: #3b8fe0; --tblr-primary-rgb: 59, 143, 224; --tblr-primary-hover: #5aa2e6;
+    
     --tblr-shadow: none; color-scheme: dark;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]):not([data-bs-theme]) {
       --tblr-body-bg: #151f2c; --tblr-bg-surface: #182433; --tblr-bg-surface-secondary: #1b2a3c;
       --tblr-body-color: #dce1e7; --tblr-secondary: #8a99ab; --tblr-border-color: #2a3c52;
-      --tblr-primary: #3b8fe0; --tblr-primary-rgb: 59, 143, 224; color-scheme: dark;
+      color-scheme: dark;
     }
   }
   *, *::before, *::after { box-sizing: border-box; }
@@ -240,789 +264,1896 @@
   .modal-open { overflow: hidden; }
 
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+  /* Extra Tabler components used by the v2 prototype */
+  a { color: var(--tblr-primary); text-decoration: none; } a:hover { text-decoration: underline; }
+  .h1 { font-size: 1.5rem; font-weight: 700; line-height: 1.2; } .h2 { font-size: 1.125rem; font-weight: 600; }
+  .subheader { font-size: .6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--tblr-secondary); }
+  .breadcrumb { display: flex; flex-wrap: wrap; list-style: none; margin: 0 0 .25rem; padding: 0; font-size: .8125rem; color: var(--tblr-secondary); }
+  .breadcrumb-item + .breadcrumb-item::before { content: "/"; padding: 0 .5rem; color: var(--tblr-secondary); }
+  .breadcrumb-item a { color: var(--tblr-secondary); } .breadcrumb-item.active { color: var(--tblr-body-color); }
+  .form-select { display: block; width: 100%; padding: .5rem 2.25rem .5rem .75rem; font: inherit; color: var(--tblr-body-color); border: 1px solid var(--tblr-border-color); border-radius: var(--tblr-radius); appearance: none; -webkit-appearance: none;
+    background: var(--tblr-bg-surface) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23667382' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") no-repeat right .75rem center / 12px 12px; }
+  .form-select:focus { outline: 0; border-color: rgba(var(--tblr-primary-rgb), .6); box-shadow: 0 0 0 .25rem rgba(var(--tblr-primary-rgb), .18); }
+  .form-select-sm { padding-top: .3125rem; padding-bottom: .3125rem; font-size: .8125rem; }
+  textarea.form-control { min-height: 5.5rem; resize: vertical; }
+  .form-check { display: flex; align-items: flex-start; gap: .5rem; margin-bottom: .5rem; cursor: pointer; }
+  .form-check-input { width: 1rem; height: 1rem; margin: .15rem 0 0; flex-shrink: 0; accent-color: var(--tblr-primary); cursor: pointer; }
+  .form-switch .form-check-input { width: 1rem; }
+  .form-hint { margin-top: .25rem; font-size: .8125rem; color: var(--tblr-secondary); }
+  .form-label.required::after { content: "*"; margin-left: .25rem; color: rgb(var(--tblr-red-rgb)); }
+  .invalid-feedback { display: none; margin-top: .25rem; font-size: .8125rem; color: rgb(var(--tblr-red-rgb)); }
+  .is-invalid { border-color: rgb(var(--tblr-red-rgb)) !important; } .is-invalid ~ .invalid-feedback { display: block; }
+  .btn-danger { background: rgb(var(--tblr-red-rgb)); border-color: rgb(var(--tblr-red-rgb)); color: #fff; }
+  .btn-danger:hover { background: #b62f2f; border-color: #b62f2f; }
+  .btn-outline-danger { color: rgb(var(--tblr-red-rgb)); border-color: rgba(var(--tblr-red-rgb), .45); }
+  .btn-outline-danger:hover { background: rgba(var(--tblr-red-rgb), .08); border-color: rgb(var(--tblr-red-rgb)); }
+  .btn-link { padding: 0; border: 0; background: none; box-shadow: none; color: var(--tblr-primary); }
+  .btn-link:hover { background: none; text-decoration: underline; }
+  .bg-blue-lt { background: rgba(var(--tblr-blue-rgb), .1) !important; color: rgb(var(--tblr-blue-rgb)) !important; }
+  .bg-red-lt { background: rgba(var(--tblr-red-rgb), .1) !important; color: rgb(var(--tblr-red-rgb)) !important; }
+  .bg-yellow-lt { background: rgba(var(--tblr-yellow-rgb), .16) !important; color: #9a6700 !important; }
+  [data-bs-theme="dark"] .bg-yellow-lt { color: #f5c04a !important; }
+  .text-green { color: rgb(var(--tblr-green-rgb)) !important; } .fs-3 { font-size: 1rem !important; }
+  .divide-y > * + * { border-top: 1px solid var(--tblr-border-color); }
+  .divide-y > *:not(:first-child) { padding-top: 1rem; } .divide-y > *:not(:last-child) { padding-bottom: 1rem; }
+  .card-sm > .card-body { padding: 1rem; }
+  .list-unstyled { list-style: none; margin: 0; padding: 0; }
+  .text-nowrap { white-space: nowrap !important; } .text-truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .align-items-end { align-items: flex-end !important; } .align-items-start { align-items: flex-start !important; }
+  .justify-content-end { justify-content: flex-end !important; } .flex-grow-1 { flex-grow: 1 !important; }
+  .gap-1 { gap: .25rem !important; } .gap-3 { gap: 1rem !important; } .w-100 { width: 100% !important; }
+  .mb-1 { margin-bottom: .25rem !important; } .mb-5 { margin-bottom: 3rem !important; } .mt-4 { margin-top: 1.5rem !important; }
+  .ms-auto { margin-left: auto !important; } .me-3 { margin-right: 1rem !important; } .p-0 { padding: 0 !important; } .p-3 { padding: 1rem !important; }
+  .g-3 { --gx: 1rem; --gy: 1rem; } .g-4 { --gx: 1.5rem; --gy: 1.5rem; }
+  @media (min-width: 576px) { .col-sm-4 { flex: 0 0 auto; width: 33.3333%; } .col-sm-6 { flex: 0 0 auto; width: 50%; } }
+  @media (min-width: 768px) { .col-md { flex: 1 0 0%; } .col-md-auto { flex: 0 0 auto; width: auto; } .col-md-3 { flex: 0 0 auto; width: 25%; }
+    .col-md-4 { flex: 0 0 auto; width: 33.3333%; } .col-md-9 { flex: 0 0 auto; width: 75%; } .sticky-md-top { position: sticky; top: 1rem; } }
+  @media (min-width: 992px) { .col-lg-4 { flex: 0 0 auto; width: 33.3333%; } .col-lg-8 { flex: 0 0 auto; width: 66.6667%; } }
+  @media (min-width: 1200px) { .col-xl-2 { flex: 0 0 auto; width: 16.6667%; } }
+  pre { margin: 0; padding: .75rem; overflow: auto; font-size: .75rem; line-height: 1.5; background: var(--tblr-bg-surface-secondary); border: 1px solid var(--tblr-border-color); border-radius: var(--tblr-radius); }
+  code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  .footer { padding: 1.5rem 0; border-top: 1px solid var(--tblr-border-color); }
+  ul, ol { margin-top: 0; }
+  .card-header:has(.card-header-tabs) { padding-top: 0; padding-bottom: 0; }
+  .card-header-tabs { border-bottom: 0; margin-bottom: -1px; }
+  .col-6 { flex: 0 0 auto; width: 50%; }
+  @media (min-width: 992px) { .col-lg { flex: 1 0 0%; } }
+  .flex-nowrap { flex-wrap: nowrap !important; } .p-4 { padding: 1.5rem !important; } .pb-2 { padding-bottom: .5rem !important; }
+  fieldset { border: 0; margin: 0; padding: 0; min-width: 0; } legend { float: none; width: auto; padding: 0; font-size: inherit; }
+  .stat-value { font-variant-numeric: tabular-nums; }
+
 </style>
+<style id="ipp-theme">
+  /* IPP class style: Tabler primary overridden with CSS variables only */
+  :root {
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    --tblr-font-sans-serif: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  :root, [data-bs-theme="light"] {
+    --tblr-primary: #1E5E3B; --tblr-primary-rgb: 30, 94, 59; --tblr-primary-fg: #ffffff;
+    --tblr-primary-darken: #184d30; --tblr-primary-hover: #184d30;
+    --tblr-primary-lt: #e8f0eb; --tblr-primary-lt-rgb: 232, 240, 235;
+    --tblr-link-color: #1E5E3B; --tblr-link-color-rgb: 30, 94, 59; --tblr-link-hover-color: #184d30;
+    --tblr-green-rgb: 47, 125, 79;
+    --ipp-heading: #1E5E3B; --ipp-hero-bg: #1E5E3B;
+  }
+  [data-bs-theme="dark"] {
+    --tblr-primary: #3f8a60; --tblr-primary-rgb: 63, 138, 96; --tblr-primary-fg: #ffffff;
+    --tblr-primary-darken: #357652; --tblr-primary-hover: #4b9a6d;
+    --tblr-link-color: #7cc49b; --tblr-link-color-rgb: 124, 196, 155; --tblr-link-hover-color: #9bd5b3;
+    --tblr-green-rgb: 92, 176, 128;
+    --ipp-heading: #8fd0aa; --ipp-hero-bg: #1E5E3B;
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  body { background: var(--tblr-body-bg); }
+  [hidden] { display: none !important; }
+  .btn-primary {
+    --tblr-btn-color: #fff; --tblr-btn-bg: var(--tblr-primary); --tblr-btn-border-color: var(--tblr-primary);
+    --tblr-btn-hover-color: #fff; --tblr-btn-hover-bg: var(--tblr-primary-darken); --tblr-btn-hover-border-color: var(--tblr-primary-darken);
+    --tblr-btn-active-bg: var(--tblr-primary-darken); --tblr-btn-active-border-color: var(--tblr-primary-darken);
+  }
+  .page-title, .card-title, .ipp-heading { color: var(--ipp-heading); }
+  .page-title:focus, #flash:focus { outline: none; }
+  .navbar-brand { flex-direction: column; align-items: flex-start !important; gap: 0; line-height: 1.25; }
+  .navbar-brand .brand-sub { font-size: .75rem; font-weight: 400; color: var(--tblr-secondary); }
+  .sidebar-heading { padding: .75rem .75rem .375rem; font-size: .75rem; color: var(--tblr-secondary); }
+  .navbar-vertical .nav-link { width: 100%; text-align: start; }
+  .navbar-vertical .nav-link .badge { margin-left: auto; }
+  .demo-banner { background: rgba(var(--tblr-primary-rgb), .07); border-bottom: 1px solid rgba(var(--tblr-primary-rgb), .2); font-size: .8125rem; }
+  .ipp-hero { background: var(--ipp-hero-bg); color: #fff; border: 0; }
+  .ipp-hero .ipp-hero-sub { color: rgba(255, 255, 255, .82); }
+  .stat-value { font-size: 1.5rem; font-weight: 700; line-height: 1.2; color: var(--tblr-body-color); }
+  .pv-option { display: flex; gap: .75rem; padding: 1rem; border: 1px solid var(--tblr-border-color); border-radius: var(--tblr-radius-lg, 8px); background: var(--tblr-bg-surface); cursor: pointer; height: 100%; }
+  .pv-option:has(input:checked) { border-color: var(--tblr-primary); box-shadow: 0 0 0 1px var(--tblr-primary); }
+  .pv-option input { margin-top: .2rem; accent-color: var(--tblr-primary); }
+  .compare-table th[scope="row"] { width: 11rem; color: var(--tblr-secondary); font-weight: 500; }
+  .compare-table td { vertical-align: top; min-width: 14rem; }
+  .meta-list { display: flex; flex-wrap: wrap; column-gap: 1rem; row-gap: .25rem; }
+  .facts dt { font-size: .75rem; color: var(--tblr-secondary); font-weight: 500; }
+  .facts dd { margin: 0 0 .75rem; }
+  .history-note { margin-top: .25rem; }
+  .modal.show { display: block; }
+  .readonly-badge { display: inline-flex; align-items: center; gap: .25rem; }
+  .table td, .table th { font-size: .8125rem; }
+  .table-responsive > .card-table { min-width: 860px; }
+  .table-responsive > .compare-table { min-width: 640px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.4.0/dist/js/tabler.min.js" defer></script>
 </head>
 <body>
 <div class="page">
-
-  <!-- Sidebar: Tabler navbar-vertical (simulated role switch) -->
   <aside class="navbar navbar-vertical navbar-expand-lg" aria-label="Sidebar">
     <div class="container-fluid">
-      <button class="navbar-toggler" type="button" id="menu-toggle" aria-controls="sidebar-menu" aria-expanded="false" aria-label="Open menu">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="navbar-brand navbar-brand-autodark">
+      <button class="navbar-toggler" type="button" id="menu-toggle" aria-controls="sidebar-menu" aria-expanded="false" aria-label="Open menu"><span class="navbar-toggler-icon"></span></button>
+      <div class="navbar-brand" aria-label="IPP – Internship Practicum Platform">
         <span class="fw-bold">IPP</span>
-        <span class="text-secondary fw-normal ms-2 small">Internship Practicum Platform</span>
+        <span class="brand-sub">Internship Practicum Platform</span>
       </div>
-      <nav class="collapse navbar-collapse" id="sidebar-menu" aria-label="Switch role">
-        <div class="sidebar-heading">Switch role (simulated)</div>
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <button type="button" class="nav-link active" data-role="student" aria-current="page">
-              <span class="nav-link-icon"><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 9l-10 -4l-10 4l10 4l10 -4v6"/><path d="M6 10.6v5.4a6 3 0 0 0 12 0v-5.4"/></svg></span>
-              <span class="nav-link-title">Student</span>
-            </button>
-          </li>
-          <li class="nav-item">
-            <button type="button" class="nav-link" data-role="employer">
-              <span class="nav-link-icon"><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z"/><path d="M8 7v-2a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v2"/><path d="M3 13a20 20 0 0 0 18 0"/></svg></span>
-              <span class="nav-link-title">Employer HR</span>
-            </button>
-          </li>
-          <li class="nav-item">
-            <button type="button" class="nav-link" data-role="admin">
-              <span class="nav-link-icon"><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"/><path d="M9 8h1"/><path d="M9 12h1"/><path d="M9 16h1"/><path d="M14 8h1"/><path d="M14 12h1"/><path d="M14 16h1"/><path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16"/></svg></span>
-              <span class="nav-link-title">University Administrator</span>
-            </button>
-          </li>
-          <li class="nav-item">
-            <button type="button" class="nav-link" data-role="faculty">
-              <span class="nav-link-icon"><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2"/><path d="M9 5a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z"/><path d="M9 14l2 2l4 -4"/></svg></span>
-              <span class="nav-link-title">Faculty</span>
-            </button>
-          </li>
-        </ul>
+      <div class="collapse navbar-collapse" id="sidebar-menu">
+        <nav aria-label="Main menu" class="w-100">
+          <div class="sidebar-heading" id="menu-heading"></div>
+          <ul class="navbar-nav" id="menu"></ul>
+        </nav>
         <div class="navbar-side">
-          <div class="px-3 py-3 d-flex align-items-center">
-            <span class="avatar avatar-sm bg-primary-lt me-2" aria-hidden="true">AL</span>
-            <div class="small">
-              <div class="fw-medium">Alex Lee</div>
-              <div class="text-secondary">STU-001, demo student</div>
-            </div>
-          </div>
+          <div class="p-3"><button type="button" class="btn w-100" data-action="reset">Reset demo</button></div>
         </div>
-      </nav>
+      </div>
     </div>
   </aside>
 
   <div class="page-wrapper">
-
-    <!-- Persistent demo banner -->
-    <div class="demo-banner" role="region" aria-label="Demo notice">
-      <div class="container-xl d-flex flex-wrap align-items-center gap-2 py-2">
-        <span class="badge bg-yellow text-yellow-fg">Demo</span>
-        <span class="flex-fill small">Synthetic data, stored in this browser only. Role switching is simulated.</span>
-        <span class="small text-danger" id="storage-warning" hidden>This browser blocked storage, so changes will be lost on reload.</span>
-        <button type="button" class="btn btn-sm" id="reset-demo">Reset demo</button>
+    <div class="demo-banner" role="note" aria-label="Prototype notice">
+      <div class="container-xl py-2 d-flex flex-wrap gap-2 align-items-center">
+        <span class="badge bg-green-lt">Prototype</span>
+        <span class="flex-fill">Prototype for coursework. Synthetic data stored in this browser only. Role switching and all decisions are simulated. Real login, shared storage, eligibility checks and faculty review decisions are deferred.</span>
+        <span class="text-danger" id="storage-warning" hidden>Storage is blocked in this browser, so changes will be lost on reload.</span>
       </div>
     </div>
 
-    <div class="page-header d-print-none">
-      <div class="container-xl">
-        <div class="row g-2 align-items-center">
-          <div class="col">
-            <h1 class="page-title" id="page-title">Find and apply for internships</h1>
-            <div class="text-secondary mt-1" id="page-subtitle">Viewing as Alex Lee (STU-001), the demo student.</div>
+    <main>
+      <div class="page-header d-print-none">
+        <div class="container-xl">
+          <div class="row g-3 align-items-end">
+            <div class="col-12 col-md">
+              <nav aria-label="Breadcrumb"><ol class="breadcrumb" id="crumbs"></ol></nav>
+              <div class="d-flex flex-wrap align-items-center gap-2">
+                <h1 class="page-title" id="page-title" tabindex="-1"></h1>
+                <div id="page-badges"></div>
+              </div>
+            </div>
+            <div class="col-12 col-md-auto">
+              <div class="d-flex flex-wrap align-items-end gap-3">
+                <div>
+                  <label class="form-label small mb-1" for="role-select">Demo role (simulated)</label>
+                  <select class="form-select form-select-sm" id="role-select">
+                    <option value="student">Student</option>
+                    <option value="employer">Employer HR</option>
+                    <option value="admin">University Administrator</option>
+                    <option value="faculty">Faculty Reviewer</option>
+                  </select>
+                </div>
+                <div id="student-pick">
+                  <label class="form-label small mb-1" for="student-select">Demo student</label>
+                  <select class="form-select form-select-sm" id="student-select"></select>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  <span class="avatar avatar-sm bg-green-lt" id="person-avatar" aria-hidden="true"></span>
+                  <div class="small">
+                    <div class="fw-medium" id="person-name"></div>
+                    <div class="text-secondary" id="person-role"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="page-body">
-      <div class="container-xl">
-
-        <div id="flash" tabindex="-1"></div>
-
-        <!-- ============ STUDENT VIEW (Group 4) ============ -->
-        <section id="view-student" aria-labelledby="page-title">
-          <ul class="nav nav-tabs mb-4" role="tablist">
-            <li class="nav-item" role="presentation">
-              <button type="button" class="nav-link active" id="tab-opps" role="tab" aria-controls="panel-opps" aria-selected="true" data-tab="opps">Opportunities</button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button type="button" class="nav-link" id="tab-apps" role="tab" aria-controls="panel-apps" aria-selected="false" data-tab="apps">My applications <span class="badge bg-secondary-lt ms-2" id="apps-count">0</span></button>
-            </li>
-          </ul>
-
-          <!-- Opportunities tab -->
-          <div id="panel-opps" role="tabpanel" aria-labelledby="tab-opps">
-            <div id="opps-list-view">
-              <div class="mb-3 opp-search" id="search-wrap">
-                <label class="form-label" for="opp-search">Search opportunities</label>
-                <div class="input-icon">
-                  <span class="input-icon-addon"><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg></span>
-                  <input type="search" class="form-control" id="opp-search" placeholder="Search by title or organization" autocomplete="off">
-                </div>
-              </div>
-              <p class="text-secondary mb-3" id="opp-count" aria-live="polite"></p>
-              <div class="row row-cards" id="opp-grid"></div>
-              <div class="empty" id="opp-empty" hidden>
-                <p class="empty-title" id="opp-empty-text"></p>
-              </div>
-            </div>
-            <div id="opp-detail-view" hidden></div>
-          </div>
-
-          <!-- My applications tab -->
-          <div id="panel-apps" role="tabpanel" aria-labelledby="tab-apps" hidden>
-            <div class="card">
-              <div class="card-header">
-                <h2 class="card-title">My applications</h2>
-              </div>
-              <div class="table-responsive" id="apps-table-wrap" tabindex="0" aria-label="My applications table">
-                <table class="table table-vcenter table-mobile-md card-table">
-                  <thead>
-                    <tr>
-                      <th>Application ID</th>
-                      <th>Opportunity</th>
-                      <th>Organization</th>
-                      <th>Submitted</th>
-                      <th>Application status</th>
-                      <th>Placement status</th>
-                      <th>Next step</th>
-                    </tr>
-                  </thead>
-                  <tbody id="apps-body"></tbody>
-                </table>
-              </div>
-              <div class="card-body" id="apps-empty" hidden>
-                <div class="empty py-4">
-                  <p class="empty-title">You haven’t applied to any opportunities yet.</p>
-                </div>
-              </div>
-              <div class="card-footer">
-                <p class="m-0 text-secondary">An application is not a placement. A placement is only confirmed by the university.</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- ============ STAND-IN VIEWS (other groups) ============ -->
-        <section id="view-employer" aria-labelledby="page-title" hidden>
-          <div class="card">
-            <div class="card-header"><h2 class="card-title">Opportunities and their approval status</h2></div>
-            <div class="table-responsive" tabindex="0" aria-label="Employer opportunities table">
-              <table class="table table-vcenter table-mobile-md card-table">
-                <thead><tr><th>Opportunity ID</th><th>Title</th><th>Organization</th><th>Approval status</th></tr></thead>
-                <tbody id="employer-body"></tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <section id="view-admin" aria-labelledby="page-title" hidden>
-          <div class="card">
-            <div class="card-header"><h2 class="card-title">Opportunities waiting for approval</h2></div>
-            <div class="table-responsive" tabindex="0" aria-label="Approval table">
-              <table class="table table-vcenter table-mobile-md card-table">
-                <thead><tr><th>Opportunity ID</th><th>Title</th><th>Organization</th><th>Approval status</th><th class="w-1"><span class="visually-hidden">Actions</span></th></tr></thead>
-                <tbody id="admin-body"></tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <section id="view-faculty" aria-labelledby="page-title" hidden>
-          <div class="card">
-            <div class="card-header"><h2 class="card-title">Student applications</h2></div>
-            <div class="table-responsive" tabindex="0" aria-label="Faculty applications table">
-              <table class="table table-vcenter table-mobile-md card-table">
-                <thead><tr><th>Application ID</th><th>Student</th><th>Opportunity</th><th>Submitted</th><th>Application status</th><th>Placement status</th></tr></thead>
-                <tbody id="faculty-body"></tbody>
-              </table>
-            </div>
-            <div class="card-body" id="faculty-empty" hidden>
-              <div class="empty py-4"><p class="empty-title">No applications have been submitted yet.</p></div>
-            </div>
-          </div>
-        </section>
-
+      <div class="page-body">
+        <div class="container-xl">
+          <div id="flash" tabindex="-1"></div>
+          <div id="view"></div>
+        </div>
       </div>
-    </div>
+    </main>
+
+    <footer class="footer footer-transparent d-print-none">
+      <div class="container-xl small text-secondary">UI built with Tabler (MIT licence).</div>
+    </footer>
   </div>
 </div>
 
-<!-- Confirmation dialog (Tabler modal) -->
-<div class="modal modal-blur" id="apply-modal" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="apply-modal-title" aria-describedby="apply-modal-desc" hidden>
+<div class="modal modal-blur" id="modal" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title" id="apply-modal-title">Submit application</h2>
-        <button type="button" class="btn-close" data-action="modal-cancel" aria-label="Cancel"></button>
-      </div>
-      <div class="modal-body" id="apply-modal-desc">
-        <p class="mb-2">Submit your application to <strong id="modal-title-text"></strong> at <strong id="modal-org-text"></strong>?</p>
-        <p class="mb-0 text-secondary">Submitting does not approve a placement.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn me-auto" id="modal-cancel" data-action="modal-cancel">Cancel</button>
-        <button type="button" class="btn btn-primary" id="modal-submit" data-action="modal-submit">Submit</button>
-      </div>
+      <form id="modal-form" novalidate>
+        <div class="modal-header">
+          <h2 class="modal-title" id="modal-title"></h2>
+          <button type="button" class="btn-close" data-action="modal-close" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="modal-body"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn me-auto" id="modal-cancel" data-action="modal-close">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="modal-confirm">Confirm</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
 
 <script>
 (function () {
-  'use strict';
+'use strict';
 
-  /* ---------- Theme: follow the viewer's light/dark setting ---------- */
-  var root = document.documentElement;
-  var darkQuery = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
-  function applyTheme() {
-    var t = root.getAttribute('data-theme');
-    if (t !== 'light' && t !== 'dark') t = darkQuery && darkQuery.matches ? 'dark' : 'light';
-    root.setAttribute('data-bs-theme', t);
-  }
-  applyTheme();
-  if (darkQuery && darkQuery.addEventListener) darkQuery.addEventListener('change', applyTheme);
-  new MutationObserver(applyTheme).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+/* =====================================================================
+   0. Theme: follow the viewer's light / dark setting
+   ===================================================================== */
+const root = document.documentElement;
+const darkQuery = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+function applyTheme() {
+  let t = root.getAttribute('data-theme');
+  if (t !== 'light' && t !== 'dark') t = darkQuery && darkQuery.matches ? 'dark' : 'light';
+  root.setAttribute('data-bs-theme', t);
+}
+applyTheme();
+if (darkQuery && darkQuery.addEventListener) darkQuery.addEventListener('change', applyTheme);
+new MutationObserver(applyTheme).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
 
-  /* ---------- Shared records (synthetic seed data) ---------- */
-  var STORE_KEY = 'ipp-shared-records-v1';
-  var DEMO_STUDENT = 'STU-001';
-  var STATUS_SUBMITTED = 'Submitted';
-  var PLACEMENT_NOT_PLACED = 'Not placed';
-  var INACTIVE_STATUSES = ['Withdrawn', 'Rejected'];
-  var MSG_DUPLICATE = 'You have already applied to this opportunity.';
+/* =====================================================================
+   1. Constants and helpers
+   ===================================================================== */
+const KEY = 'ipp_g4_v2';
+const VERSION = 2;
+const DAY = 86400000;
+const CLOSED_STATUSES = ['Declined', 'Withdrawn', 'Offer Declined'];          // BR-03
+const EMPLOYER_STATUSES = ['Under Review', 'Shortlisted', 'Interview Scheduled', 'Offer Made', 'Declined'];
+const APP_STATUSES = ['Draft', 'Submitted', 'Under Review', 'Shortlisted', 'Interview Scheduled', 'Offer Made', 'Offer Accepted', 'Offer Declined', 'Declined', 'Withdrawn'];
+const PLACEMENT_STATUSES = ['Not placed', 'Awaiting university confirmation', 'Placement confirmed', 'Placement not approved'];
+const ADMIN = { role: 'University Administrator', name: 'Sara Ali (Career Services)' };
+const FACULTY = { id: 'FAC-001', name: 'Dr. Ahmed Saleh' };
 
-  var SEED = {
-    students: [{ student_id: 'STU-001', full_name: 'Alex Lee' }],
-    employers: [
-      { employer_id: 'EMP-001', organization_name: 'Evergreen Labs' },
-      { employer_id: 'EMP-002', organization_name: 'Northwind Analytics' },
-      { employer_id: 'EMP-003', organization_name: 'Harbor Robotics' },
-      { employer_id: 'EMP-004', organization_name: 'Bluefin Health' }
-    ],
-    opportunities: [
-      { opportunity_id: 'OPP-001', employer_id: 'EMP-002', title: 'Data Analyst Intern', location: 'Abu Dhabi', work_mode: 'Hybrid', duration: '10 weeks', approval_status: 'Approved',
-        description: 'Clean and analyse customer survey data, build weekly dashboards for the operations team, and present one finding to the analytics lead at the end of the internship.' },
-      { opportunity_id: 'OPP-002', employer_id: 'EMP-003', title: 'Machine Learning Intern', location: 'Dubai', work_mode: 'On-site', duration: '12 weeks', approval_status: 'Approved',
-        description: 'Help train and evaluate vision models for warehouse robots. You will label data, run experiments, and write short reports comparing model results.' },
-      { opportunity_id: 'OPP-003', employer_id: 'EMP-001', title: 'UX Research Intern', location: 'Abu Dhabi', work_mode: 'Remote', duration: '8 weeks', approval_status: 'Pending Review',
-        description: 'Plan and run user interviews for a new booking app, turn notes into clear findings, and help the design team decide what to build next.' },
-      { opportunity_id: 'OPP-004', employer_id: 'EMP-004', title: 'Backend Engineering Intern', location: 'Abu Dhabi', work_mode: 'On-site', duration: '12 weeks', approval_status: 'Pending Review',
-        description: 'Build and test API endpoints for a clinic scheduling system, with code reviews from a senior engineer each week.' },
-      { opportunity_id: 'OPP-005', employer_id: 'EMP-002', title: 'Cloud Operations Intern', location: 'Dubai', work_mode: 'Hybrid', duration: '8 weeks', approval_status: 'Approved',
-        description: 'Monitor cloud services, write runbooks for common alerts, and help automate routine checks for the platform team.' }
-    ],
-    applications: [],
-    last_application_number: 0
+const $ = (id) => document.getElementById(id);
+const pad = (n) => String(n).padStart(3, '0');
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+const norm = (s) => String(s || '').toLowerCase().replace(/\s+/g, ' ').trim();
+function at(dayOffset, h, m) {
+  const d = new Date();
+  d.setDate(d.getDate() + dayOffset);
+  d.setHours(h == null ? 9 : h, m || 0, 0, 0);
+  return d.toISOString();
+}
+function startOfDay(d) { const x = new Date(d); x.setHours(0, 0, 0, 0); return x; }
+function dayDiff(a, b) { return Math.round((startOfDay(a) - startOfDay(b)) / DAY); }
+function fmtDate(iso) {
+  if (!iso) return '–';
+  const d = new Date(iso);
+  return isNaN(d) ? '–' : d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+function fmtTime(iso) { return new Date(iso).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }); }
+function fmtDateTime(iso) { return iso ? fmtDate(iso) + ', ' + fmtTime(iso) : '–'; }
+function initials(name) {
+  return String(name).replace(/^Dr\.\s*/, '').split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join('');
+}
+function plural(n, one, many) { return n + ' ' + (n === 1 ? one : many); }
+
+const ICON_PATHS = {
+  home: '<path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"/><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"/>',
+  briefcase: '<path d="M3 9a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z"/><path d="M8 7v-2a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v2"/><path d="M3 13a20 20 0 0 0 18 0"/>',
+  columns: '<path d="M4 6h5"/><path d="M4 10h5"/><path d="M4 14h5"/><path d="M4 18h5"/><path d="M15 6h5"/><path d="M15 10h5"/><path d="M15 14h5"/><path d="M15 18h5"/>',
+  file: '<path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/><path d="M9 13h6"/><path d="M9 17h6"/>',
+  user: '<path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/>',
+  inbox: '<path d="M4 6a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M4 13h3l3 3h4l3 -3h3"/>',
+  plus: '<path d="M12 5v14"/><path d="M5 12h14"/>',
+  check: '<path d="M5 12l5 5l10 -10"/>',
+  send: '<path d="M10 14l11 -11"/><path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5"/>',
+  dashboard: '<path d="M4 4h6v8h-6z"/><path d="M4 16h6v4h-6z"/><path d="M14 12h6v8h-6z"/><path d="M14 4h6v4h-6z"/>',
+  users: '<path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0 -3 -3.85"/>',
+  info: '<path d="M3 12a9 9 0 1 0 9 -9a9 9 0 0 0 -9 9"/><path d="M12 9h.01"/><path d="M11 12h1v4h1"/>',
+  org: '<path d="M3 21h18"/><path d="M9 8h1"/><path d="M9 12h1"/><path d="M9 16h1"/><path d="M14 8h1"/><path d="M14 12h1"/><path d="M14 16h1"/><path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16"/>',
+  pin: '<path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z"/>',
+  mode: '<path d="M3 19h18"/><path d="M5 7a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v8a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1z"/>',
+  clock: '<path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 7v5l3 3"/>',
+  calendar: '<path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/>',
+  search: '<path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/>',
+  eye: '<path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"/>',
+  back: '<path d="M5 12h14"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/>',
+};
+function icon(name, cls) {
+  return '<svg xmlns="http://www.w3.org/2000/svg" class="icon ' + (cls || '') + '" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICON_PATHS[name] + '</svg>';
+}
+
+/* =====================================================================
+   2. Seed data (all dates relative to the moment of seeding)
+   ===================================================================== */
+const EMPLOYER_ROWS = [
+  ['EMPL-001', 'Evergreen Labs', 'Product & UX research', 'Abu Dhabi', 'Mariam Haddad'],
+  ['EMPL-002', 'Northstar Analytics', 'Data & analytics', 'Dubai', 'Karim Nasser'],
+  ['EMPL-003', 'Gulf Data Co', 'Software & cloud', 'Abu Dhabi', 'Hessa Al Mansoori'],
+  ['EMPL-004', 'Falcon Aero Services', 'Aviation', 'Dubai', 'Omar Khalid'],
+  ['EMPL-005', 'Sahara Fintech', 'Financial technology', 'Dubai', 'Lina Farouk'],
+  ['EMPL-006', 'Oasis Health Group', 'Healthcare', 'Abu Dhabi', 'Yousef Darwish'],
+  ['EMPL-007', 'Dune Logistics', 'Supply chain', 'Dubai', 'Aisha Rahman'],
+  ['EMPL-008', 'Marina Energy Solutions', 'Energy', 'Abu Dhabi', 'Tariq Saeed'],
+  ['EMPL-009', 'Crescent Consulting Partners', 'Management consulting', 'Dubai', 'Reem Khalifa'],
+  ['EMPL-010', 'Pearl Telecom Labs', 'Telecommunications', 'Abu Dhabi', 'Samir Aziz'],
+  ['EMPL-011', 'Atlas Retail Insights', 'Retail analytics', 'Dubai', 'Dana Qasim'],
+  ['EMPL-012', 'Horizon Smart City Lab', 'Government technology', 'Abu Dhabi', 'Khalid Obaid'],
+];
+
+// [id, employer, title, location, mode, duration, stipend, deadline offset, approval, listing, positions, posted days ago, description, responsibilities, requirements, skills, recommendation]
+const OPP_ROWS = [
+  ['OPP-001', 'EMPL-001', 'Product Design Intern', 'Abu Dhabi', 'Hybrid', '12 weeks', 'AED 3,500 / month', 20, 'Approved', 'Open', 2, 14,
+    'Join the product design team that builds booking and scheduling tools for clinics and schools across the UAE. You will turn research findings into wireframes and tested prototypes. Interns work in two-week sprints with a senior designer and a product manager.',
+    ['Create wireframes and clickable prototypes in Figma', 'Run quick usability tests with 5 to 8 users per round', 'Add new components to the design system', 'Present design options at sprint reviews'],
+    ['BSc student in AI, computer science or design', 'A portfolio or class project that shows design work', 'Basic Figma skills', 'Clear written English'],
+    ['Figma', 'Prototyping', 'Usability testing', 'Design systems']],
+  ['OPP-002', 'EMPL-002', 'Data Analytics Intern', 'Dubai', 'On-site', '12 weeks', 'AED 4,000 / month', 18, 'Approved', 'Open', 2, 12,
+    'Northstar Analytics helps retail and logistics clients understand their operations through data. As an intern you will clean client datasets, build dashboards and write short insight reports. You will work with a senior analyst on two client accounts.',
+    ['Clean and join datasets from client systems', 'Build dashboards in Power BI', 'Write weekly insight summaries', 'Check data quality and log issues'],
+    ['Coursework in statistics or data analysis', 'SQL basics', 'Python or R for data work', 'Attention to detail'],
+    ['SQL', 'Python', 'Power BI', 'Data cleaning']],
+  ['OPP-003', 'EMPL-001', 'UX Research Intern', 'Abu Dhabi', 'Hybrid', '12 weeks', 'AED 3,500 / month', 25, 'Approved', 'Open', 1, 10,
+    'Help Evergreen Labs understand how students and families use its learning apps. You will plan interviews, run usability sessions and turn notes into findings the product team can act on. The role suits someone curious about people and comfortable presenting.',
+    ['Plan and run user interviews', 'Turn notes into themes and findings', 'Keep the research library up to date', 'Share findings with designers and engineers'],
+    ['Interest in human-centred design', 'Good interviewing and note-taking skills', 'Basic survey design', 'Arabic and English is an advantage'],
+    ['User interviews', 'Survey design', 'Affinity mapping', 'Presentation']],
+  ['OPP-004', 'EMPL-003', 'Cloud Engineering Intern', 'Abu Dhabi', 'On-site', '16 weeks', 'AED 4,500 / month', 30, 'Approved', 'Open', 2, 30,
+    'Gulf Data Co runs cloud platforms for public and private sector clients. Interns join the platform team to automate deployments, monitor services and improve infrastructure as code. You will be paired with an engineer and own one small automation project.',
+    ['Write Terraform modules for test environments', 'Build CI/CD pipelines', 'Monitor services and respond to alerts with a mentor', 'Document runbooks'],
+    ['Linux command line', 'One programming language (Python or Go)', 'Basic networking knowledge', 'Interest in cloud certifications'],
+    ['AWS', 'Terraform', 'Linux', 'CI/CD', 'Python']],
+  ['OPP-005', 'EMPL-004', 'Aviation Operations Analyst Intern', 'Dubai', 'Hybrid', '10 weeks', 'AED 4,000 / month', 12, 'Approved', 'Open', 1, 20,
+    'Falcon Aero Services provides ground handling and maintenance planning for airlines in Dubai. The operations analytics team tracks turnaround times, delays and use of staff and equipment. You will build analyses that help planners reduce delays.',
+    ['Analyse turnaround and delay data', 'Build weekly operations dashboards', 'Support root-cause reviews of major delays', 'Present findings to the operations manager'],
+    ['Strong Excel and SQL', 'Python for analysis', 'Interest in aviation or operations', 'Good communication'],
+    ['SQL', 'Python', 'Excel', 'Tableau', 'Operations analysis'],
+    { reasons: ['Matches interest: aviation analytics', 'Uses your SQL and Tableau skills'], skill_gap: 'Operations analysis' }],
+  ['OPP-006', 'EMPL-005', 'Risk Analytics Intern', 'Dubai', 'Hybrid', '12 weeks', 'AED 5,000 / month', 15, 'Approved', 'Open', 1, 28,
+    'Sahara Fintech offers digital payments and small-business lending. The risk team builds models that flag fraud and estimate credit risk. You will help test these models and monitor how they perform.',
+    ['Prepare data for fraud and credit models', 'Track model performance and write monthly reports', 'Test new risk rules on past data', 'Document data sources and assumptions'],
+    ['Coursework in statistics or machine learning', 'Python with pandas', 'Basic finance knowledge', 'Careful handling of sensitive data'],
+    ['Python', 'Statistics', 'Credit risk', 'SQL']],
+  ['OPP-007', 'EMPL-006', 'Healthcare Data Intern', 'Abu Dhabi', 'On-site', '12 weeks', 'AED 3,000 / month', 22, 'Approved', 'Open', 2, 18,
+    'Oasis Health Group runs clinics and a hospital across Abu Dhabi. The data team gives clinical and operations leaders reports on patient flow, waiting times and capacity. Interns work only with de-identified data under strict privacy rules.',
+    ['Build reports on clinic waiting times', 'Clean and check de-identified patient flow data', 'Support a capacity planning analysis', 'Document data definitions'],
+    ['SQL and Python basics', 'Interest in healthcare', 'Respect for data privacy rules', 'Clear communication'],
+    ['SQL', 'Python', 'Power BI', 'Data privacy']],
+  ['OPP-008', 'EMPL-007', 'Supply Chain Analyst Intern', 'Dubai', 'On-site', '8 weeks', 'AED 3,000 / month', 10, 'Approved', 'Open', 2, 16,
+    'Dune Logistics runs warehouses and last-mile delivery across Dubai. The planning team forecasts demand and plans delivery routes for e-commerce clients. You will support forecasting and help measure on-time delivery.',
+    ['Prepare weekly demand forecasts', 'Analyse delivery times by zone', 'Build Excel models for warehouse staffing', 'Present findings to planners'],
+    ['Strong Excel skills', 'Python or R basics', 'Interest in operations and supply chain'],
+    ['Excel', 'Python', 'Forecasting', 'Optimisation']],
+  ['OPP-009', 'EMPL-008', 'Energy Data Science Intern', 'Abu Dhabi', 'Hybrid', '16 weeks', 'AED 5,000 / month', 28, 'Approved', 'Open', 1, 24,
+    'Marina Energy Solutions develops solar and battery projects in the UAE. The data science team forecasts solar output and battery use from weather and sensor data. Interns build and test forecasting models with a senior data scientist.',
+    ['Clean sensor and weather time series', 'Build and compare forecasting models', 'Measure forecast accuracy', 'Write a short technical report'],
+    ['Python with pandas', 'Coursework in machine learning', 'Interest in renewable energy', 'Comfort with time series data'],
+    ['Python', 'Time series', 'Machine learning', 'Pandas']],
+  ['OPP-010', 'EMPL-009', 'Strategy Consulting Intern', 'Dubai', 'On-site', '10 weeks', 'AED 4,500 / month', 14, 'Approved', 'Open', 2, 35,
+    'Crescent Consulting Partners advises public and private sector clients in the Gulf on strategy and operations. Interns join a project team for one client engagement. You will research markets, build simple models and prepare slides for client meetings.',
+    ['Research markets and competitors', 'Build Excel models for business cases', 'Draft slides for client meetings', 'Take notes in client workshops'],
+    ['Strong Excel and PowerPoint', 'Structured problem solving', 'Clear writing in English', 'Interest in business strategy'],
+    ['Market research', 'Excel', 'PowerPoint', 'Problem structuring']],
+  ['OPP-011', 'EMPL-010', 'Network Analytics Intern', 'Abu Dhabi', 'On-site', '12 weeks', 'AED 3,500 / month', 9, 'Approved', 'Open', 1, 26,
+    'Pearl Telecom Labs is the research arm of a regional telecom operator. The network analytics team studies traffic and fault data to predict outages before customers notice. You will build analyses and simple anomaly detection models.',
+    ['Analyse network traffic and fault logs', 'Prototype anomaly detection models', 'Build Grafana dashboards for engineers', 'Summarise findings each week'],
+    ['Python and SQL', 'Basic statistics', 'Interest in networks or telecom'],
+    ['Python', 'SQL', 'Anomaly detection', 'Grafana']],
+  ['OPP-012', 'EMPL-011', 'Retail Insights Intern', 'Dubai', 'Remote', '8 weeks', 'AED 2,500 / month', 16, 'Approved', 'Open', 2, 15,
+    'Atlas Retail Insights helps shopping malls and retailers understand customer behaviour. This remote internship focuses on loyalty and basket data. You will build analyses that help retailers plan promotions.',
+    ['Analyse basket and loyalty data', 'Group customers by buying behaviour', 'Build Looker Studio reports', 'Present one promotion recommendation'],
+    ['SQL basics', 'Python or Excel for analysis', 'Reliable home internet for remote work'],
+    ['SQL', 'Python', 'Customer analytics', 'Looker Studio']],
+  ['OPP-013', 'EMPL-012', 'Smart City AI Intern', 'Abu Dhabi', 'Hybrid', '16 weeks', 'AED 4,000 / month', 35, 'Approved', 'Open', 2, 8,
+    'Horizon Smart City Lab builds AI tools for city services in Abu Dhabi. The mobility team uses camera and sensor data to measure traffic and pedestrian flow. Interns help train and evaluate computer vision models on anonymised data.',
+    ['Label and prepare anonymised image data', 'Train and evaluate detection models', 'Map results with GIS tools', 'Document model limits and privacy steps'],
+    ['Python and PyTorch basics', 'Coursework in computer vision or deep learning', 'Interest in public sector technology', 'Respect for privacy rules'],
+    ['Python', 'PyTorch', 'Computer vision', 'GIS']],
+  ['OPP-014', 'EMPL-003', 'Software Engineering Intern', 'Abu Dhabi', 'On-site', '16 weeks', 'AED 4,500 / month', 27, 'Approved', 'Open', 3, 9,
+    'Gulf Data Co builds data platforms and web services for its clients. Software engineering interns join a product squad and ship real features. You will write backend code, tests and documentation, with code reviews from senior engineers.',
+    ['Build REST API endpoints in Python', 'Write unit and integration tests', 'Fix bugs from the team backlog', 'Take part in code reviews'],
+    ['Python or Java', 'Git basics', 'Understanding of databases', 'Willingness to learn from code reviews'],
+    ['Python', 'REST APIs', 'Git', 'Docker', 'SQL']],
+  ['OPP-015', 'EMPL-002', 'Machine Learning Intern', 'Dubai', 'Hybrid', '12 weeks', 'AED 5,000 / month', 24, 'Approved', 'Open', 1, 11,
+    'Northstar Analytics builds machine learning models for retail and logistics clients. The ML team works on demand forecasting and product recommendations. Interns build features, train models and help put them into production.',
+    ['Build and test features for client models', 'Train and compare models', 'Help package models for deployment', 'Write experiment notes'],
+    ['Python with scikit-learn', 'Coursework in machine learning', 'SQL basics', 'Interest in production machine learning'],
+    ['Python', 'scikit-learn', 'PyTorch', 'SQL', 'MLOps'],
+    { reasons: ['Matches interest: forecasting', 'Uses your Python and SQL skills'], skill_gap: 'MLOps' }],
+  ['OPP-016', 'EMPL-005', 'Business Analyst Intern', 'Dubai', 'Hybrid', '10 weeks', 'AED 4,000 / month', 19, 'Approved', 'Open', 1, 7,
+    'Sahara Fintech is growing its business banking products. Business analyst interns work between product managers and engineers. You will gather requirements, map processes and write user stories.',
+    ['Interview internal users and write requirements', 'Map current and future processes', 'Write user stories and acceptance criteria', 'Track work in Jira'],
+    ['Strong written English', 'Logical thinking', 'Interest in finance or product management'],
+    ['Requirements', 'Process mapping', 'Jira', 'SQL']],
+  ['OPP-021', 'EMPL-001', 'AI Research Intern', 'Remote', 'Remote', '12 weeks', 'AED 3,500 / month', -6, 'Approved', 'Closed', 1, 40,
+    'Evergreen Labs runs a small research group studying how language models can support students. This remote internship focuses on checking model answers for accuracy and bias. Applications for this cycle are closed.',
+    ['Design evaluation sets', 'Run model evaluations', 'Analyse errors and bias', 'Write a short research summary'],
+    ['Python and PyTorch', 'Coursework in NLP', 'Good academic writing'],
+    ['Python', 'PyTorch', 'NLP', 'Research writing']],
+  ['OPP-022', 'EMPL-004', 'Fleet Planning Intern', 'Dubai', 'On-site', '8 weeks', 'AED 3,000 / month', -2, 'Approved', 'Closed', 1, 32,
+    'Falcon Aero Services plans vehicle and equipment fleets for its ground operations. The fleet planning intern supports utilisation analysis and replacement planning. Applications for this cycle are closed.',
+    ['Analyse equipment utilisation', 'Update fleet replacement models', 'Prepare monthly fleet reports'],
+    ['Strong Excel', 'SQL basics', 'Interest in aviation operations'],
+    ['Excel', 'SQL', 'Optimisation']],
+  ['OPP-028', 'EMPL-004', 'Data Analytics Intern – Aviation', 'Dubai', 'On-site', '12 weeks', 'AED 4,500 / month', 21, 'Approved', 'Open', 2, 6,
+    'Falcon Aero Services is building a data team to improve on-time performance across its ground operations at Dubai airports. As an intern, you will analyse flight, turnaround and staffing data to find the causes of delays. You will build dashboards used by shift managers. At the end of the internship you will present one improvement proposal.',
+    ['Clean and combine flight, turnaround and staffing data', 'Build on-time performance dashboards for shift managers', 'Analyse delay causes and staffing gaps', 'Present an improvement proposal to operations leads'],
+    ['BSc student in AI, data science or a related field', 'SQL and Python for data analysis', 'Experience with a BI tool', 'Interest in aviation operations', 'Available full time for 12 weeks'],
+    ['SQL', 'Python', 'Power BI', 'Jira', 'Data visualisation'],
+    { reasons: ['Matches interest: aviation analytics', 'Uses your SQL and Python skills'], skill_gap: 'Jira' }],
+  ['OPP-030', 'EMPL-011', 'Marketing Analyst Intern', 'Dubai', 'Hybrid', '8 weeks', 'AED 2,500 / month', 30, 'Pending Review', 'Open', 1, 2,
+    'Atlas Retail Insights is hiring a marketing analyst intern to measure campaign results for retail clients. You will track campaign data, run simple A/B test analyses and report results to account managers.',
+    ['Track campaign performance', 'Analyse A/B tests', 'Prepare client reports'],
+    ['Excel and SQL basics', 'Interest in marketing', 'Clear communication'],
+    ['Google Analytics', 'Excel', 'SQL', 'A/B testing']],
+];
+
+const STUDENT_ROWS = [
+  { student_id: 'STU-001', display_name: 'Alex Lee', program: 'BSc AI', year: 2, profile_versions: [
+    { profile_version_id: 'PV-001-1', label: 'General profile', ago: 40, summary: 'Second-year AI student interested in product and data roles. Built a course app for campus event sign-ups.', skills: ['Python', 'SQL', 'Figma', 'Git', 'Data visualisation'], interests: ['Product design', 'Data analytics'], cv_file: 'Alex_Lee_CV.pdf' }] },
+  { student_id: 'STU-002', display_name: 'Layla Ahmed', program: 'BSc AI', year: 3, profile_versions: [
+    { profile_version_id: 'PV-002-1', label: 'Data analytics focus', ago: 60, summary: 'Third-year AI student focused on data analytics. Led a capstone dashboard project on campus energy use.', skills: ['SQL', 'Python', 'Power BI', 'Excel', 'Statistics'], interests: ['Data analytics', 'Business intelligence'], cv_file: 'Layla_Ahmed_CV_Data.pdf' },
+    { profile_version_id: 'PV-002-2', label: 'Aviation analytics focus', ago: 25, summary: 'Third-year AI student aiming for aviation analytics. Analysed public flight delay data for a machine learning course project.', skills: ['SQL', 'Python', 'Tableau', 'Pandas', 'Forecasting', 'Data visualisation'], interests: ['Aviation analytics', 'Operations research', 'Forecasting'], cv_file: 'Layla_Ahmed_CV_Aviation.pdf' }] },
+  { student_id: 'STU-003', display_name: 'Noura Al Hammadi', program: 'BSc AI', year: 3, profile_versions: [
+    { profile_version_id: 'PV-003-1', label: 'Consulting profile', ago: 50, summary: 'Third-year AI student who enjoys structured problem solving. Led the student consulting club case team this year.', skills: ['Excel', 'PowerPoint', 'Market research', 'Python'], interests: ['Strategy', 'Management consulting'], cv_file: 'Noura_Al_Hammadi_CV.pdf' }] },
+  { student_id: 'STU-004', display_name: 'Rohan Mehta', program: 'BSc AI', year: 2, profile_versions: [
+    { profile_version_id: 'PV-004-1', label: 'Cloud and backend', ago: 55, summary: 'Second-year AI student interested in cloud infrastructure. Runs a home lab with Docker and automated backups.', skills: ['Python', 'Linux', 'AWS', 'Docker', 'Git'], interests: ['Cloud engineering', 'DevOps'], cv_file: 'Rohan_Mehta_CV.pdf' }] },
+  { student_id: 'STU-005', display_name: 'Fatima Zahra', program: 'BSc AI', year: 3, profile_versions: [
+    { profile_version_id: 'PV-005-1', label: 'Health and energy data', ago: 45, summary: 'Third-year AI student working on time series forecasting. Built a hospital bed demand forecast for a course project.', skills: ['Python', 'SQL', 'Pandas', 'Time series', 'Power BI'], interests: ['Healthcare analytics', 'Energy'], cv_file: 'Fatima_Zahra_CV.pdf' }] },
+  { student_id: 'STU-006', display_name: 'Daniel Kim', program: 'BSc AI', year: 2, profile_versions: [
+    { profile_version_id: 'PV-006-1', label: 'Retail analytics', ago: 35, summary: 'Second-year AI student interested in customer analytics. Analysed a public online shop dataset for a data mining course.', skills: ['SQL', 'Python', 'Looker Studio', 'Excel'], interests: ['Customer analytics', 'E-commerce'], cv_file: 'Daniel_Kim_CV.pdf' }] },
+];
+
+function buildSeed() {
+  const db = {
+    version: VERSION, seeded_at: new Date().toISOString(),
+    employers: EMPLOYER_ROWS.map(([employer_id, name, sector, city, hr_contact_name]) => ({ employer_id, name, sector, city, hr_contact_name })),
+    opportunities: OPP_ROWS.map((r) => ({
+      opportunity_id: r[0], employer_id: r[1], title: r[2], location: r[3], work_mode: r[4], duration: r[5], stipend: r[6],
+      deadline: at(r[7], 23, 59), approval_status: r[8], listing_status: r[9], positions: r[10], posted_at: at(-r[11], 9),
+      description: r[12], responsibilities: r[13], requirements: r[14], skills: r[15], recommendation: r[16] || null,
+    })),
+    students: STUDENT_ROWS.map((s) => ({
+      student_id: s.student_id, display_name: s.display_name, program: s.program, year: s.year, eligibility_status: 'Eligible',
+      profile_versions: s.profile_versions.map((p) => ({ profile_version_id: p.profile_version_id, label: p.label, created_at: at(-p.ago, 11), summary: p.summary, skills: p.skills, interests: p.interests, cv_file: p.cv_file })),
+    })),
+    applications: [], reviews: [], placements: [], handoffs: [],
+    counters: { opp: 30, app: 0, rev: 0, plc: 0, ho: 0 },
   };
+  const oppOf = (id) => db.opportunities.find((o) => o.opportunity_id === id);
+  const empOf = (id) => db.employers.find((e) => e.employer_id === id);
+  const stuName = (id) => db.students.find((s) => s.student_id === id).display_name;
+  const employerActor = (a) => { const e = empOf(oppOf(a.opportunity_id).employer_id); return { role: 'Employer reviewer', name: e.hr_contact_name + ' (' + e.name + ')' }; };
 
-  var storageOk = true;
-  var memoryCopy = null;
-
-  function clone(o) { return JSON.parse(JSON.stringify(o)); }
-  function isValid(d) {
-    return d && Array.isArray(d.students) && Array.isArray(d.employers) && Array.isArray(d.opportunities) && Array.isArray(d.applications);
+  function newApp(studentId, oppId, pv, createdIso, note) {
+    db.counters.app++;
+    const a = { application_id: 'APP-' + pad(db.counters.app), student_id: studentId, opportunity_id: oppId, profile_version_id: pv, cover_note: note || '',
+      application_status: null, placement_status: 'Not placed', interview: null, decline_reason: null, placement_decision_reason: null,
+      created_at: createdIso, submitted_at: null, last_employer_update_at: null, updated_at: createdIso, history: [] };
+    db.applications.push(a);
+    return a;
   }
-  function load() {
-    if (!storageOk) return clone(memoryCopy || SEED);
-    try {
-      var raw = localStorage.getItem(STORE_KEY);
-      if (raw) {
-        var d = JSON.parse(raw);
-        if (isValid(d)) return d;
-      }
-      var seeded = clone(SEED);
-      save(seeded);
-      return seeded;
-    } catch (e) {
-      storageOk = false;
-      showStorageWarning();
-      return clone(memoryCopy || SEED);
+  function step(a, to, who, iso, note, mutate) {
+    const from = a.application_status || '(new)';
+    if (mutate) mutate(a);
+    a.application_status = to;
+    if (to === 'Submitted') { a.submitted_at = iso; addReview(db, a, iso); }
+    if (to === 'Offer Accepted') a.placement_status = 'Awaiting university confirmation';
+    if (who.role === 'Employer reviewer') a.last_employer_update_at = iso;
+    a.updated_at = iso;
+    a.history.push({ from_status: from, to_status: to, actor_role: who.role, actor_name: who.name, timestamp: iso, note: note || '', next_action: nextAction(a, oppOf(a.opportunity_id)) });
+  }
+  const stu = (a) => ({ role: 'Student', name: stuName(a.student_id) });
+
+  // APP-001 Layla → OPP-011, submitted 18 days ago, no employer update
+  let a = newApp('STU-002', 'OPP-011', 'PV-002-1', at(-18, 14, 20), 'I enjoy finding patterns in large logs and would like to apply this to network data.');
+  step(a, 'Submitted', stu(a), at(-18, 14, 20), 'Submitted with profile Data analytics focus.');
+  // APP-002 Layla → OPP-005, interview in 3 days
+  a = newApp('STU-002', 'OPP-005', 'PV-002-2', at(-12, 10, 5), 'My flight delay project is close to the analysis your team does.');
+  step(a, 'Submitted', stu(a), at(-12, 10, 5), 'Submitted with profile Aviation analytics focus.');
+  step(a, 'Under Review', employerActor(a), at(-9, 11, 30), 'Application opened by the hiring team.');
+  step(a, 'Shortlisted', employerActor(a), at(-6, 15, 0), 'Strong SQL and aviation project.');
+  step(a, 'Interview Scheduled', employerActor(a), at(-2, 9, 40), 'Interview with the operations analytics lead.',
+    (x) => { x.interview = { date_time: at(3, 10, 0), mode: 'Online', location_or_link: 'Microsoft Teams link (sent by the employer)', notes: '30-minute interview with a short SQL exercise.' }; });
+  // APP-003 Layla → OPP-014, draft started 2 days ago
+  a = newApp('STU-002', 'OPP-014', 'PV-002-1', at(-2, 20, 15), '');
+  step(a, 'Draft', stu(a), at(-2, 20, 15), 'Draft started.');
+  // APP-004 Layla → OPP-006, declined
+  a = newApp('STU-002', 'OPP-006', 'PV-002-1', at(-20, 16, 0), '');
+  step(a, 'Submitted', stu(a), at(-20, 16, 0), 'Submitted with profile Data analytics focus.');
+  step(a, 'Under Review', employerActor(a), at(-15, 10, 0), 'Application opened by the risk team.');
+  step(a, 'Declined', employerActor(a), at(-8, 13, 10), 'Reason: Position filled by a candidate with more finance experience.',
+    (x) => { x.decline_reason = 'Position filled by a candidate with more finance experience.'; });
+  // APP-005 Noura → OPP-010, offer accepted, awaiting university confirmation
+  a = newApp('STU-003', 'OPP-010', 'PV-003-1', at(-25, 9, 30), '');
+  step(a, 'Submitted', stu(a), at(-25, 9, 30), 'Submitted with profile Consulting profile.');
+  step(a, 'Under Review', employerActor(a), at(-20, 10, 0), '');
+  step(a, 'Shortlisted', employerActor(a), at(-16, 12, 0), '');
+  step(a, 'Interview Scheduled', employerActor(a), at(-14, 9, 0), 'Case interview with a project manager.',
+    (x) => { x.interview = { date_time: at(-11, 11, 0), mode: 'On-site', location_or_link: 'Crescent Consulting Partners, Dubai office', notes: 'Case interview.' }; });
+  step(a, 'Offer Made', employerActor(a), at(-5, 16, 0), 'Offer for the 10-week internship.');
+  step(a, 'Offer Accepted', stu(a), at(-3, 18, 30), 'Offer accepted by the student.');
+  // APP-006 Rohan → OPP-004, placement confirmed
+  a = newApp('STU-004', 'OPP-004', 'PV-004-1', at(-30, 11, 0), '');
+  step(a, 'Submitted', stu(a), at(-30, 11, 0), 'Submitted with profile Cloud and backend.');
+  step(a, 'Under Review', employerActor(a), at(-26, 10, 0), '');
+  step(a, 'Interview Scheduled', employerActor(a), at(-22, 9, 0), 'Technical interview.',
+    (x) => { x.interview = { date_time: at(-19, 14, 0), mode: 'On-site', location_or_link: 'Gulf Data Co, Abu Dhabi office', notes: 'Technical interview with the platform team.' }; });
+  step(a, 'Offer Made', employerActor(a), at(-15, 15, 0), 'Offer for the 16-week internship.');
+  step(a, 'Offer Accepted', stu(a), at(-12, 10, 0), 'Offer accepted by the student.');
+  placeStep(db, a, 'Placement confirmed', ADMIN, at(-7, 12, 0), 'Placement confirmed after checking the offer letter.');
+  // APP-007 Fatima → OPP-007, shortlisted
+  a = newApp('STU-005', 'OPP-007', 'PV-005-1', at(-10, 13, 0), '');
+  step(a, 'Submitted', stu(a), at(-10, 13, 0), 'Submitted with profile Health and energy data.');
+  step(a, 'Under Review', employerActor(a), at(-7, 9, 30), '');
+  step(a, 'Shortlisted', employerActor(a), at(-4, 14, 0), 'Good forecasting project.');
+  // APP-008 Daniel → OPP-012, under review
+  a = newApp('STU-006', 'OPP-012', 'PV-006-1', at(-9, 17, 0), '');
+  step(a, 'Submitted', stu(a), at(-9, 17, 0), 'Submitted with profile Retail analytics.');
+  step(a, 'Under Review', employerActor(a), at(-5, 10, 0), '');
+  // APP-009 Alex → OPP-001, submitted 3 days ago
+  a = newApp('STU-001', 'OPP-001', 'PV-001-1', at(-3, 12, 0), '');
+  step(a, 'Submitted', stu(a), at(-3, 12, 0), 'Submitted with profile General profile.');
+  // APP-010 Fatima → OPP-009, withdrawn
+  a = newApp('STU-005', 'OPP-009', 'PV-005-1', at(-14, 15, 0), '');
+  step(a, 'Submitted', stu(a), at(-14, 15, 0), 'Submitted with profile Health and energy data.');
+  step(a, 'Under Review', employerActor(a), at(-10, 11, 0), '');
+  step(a, 'Withdrawn', stu(a), at(-6, 19, 0), 'Withdrawn by the student.');
+  return db;
+}
+
+function addReview(db, a, iso) {
+  if (db.reviews.some((r) => r.application_id === a.application_id)) return;   // exactly one per application
+  db.counters.rev++;
+  db.reviews.push({ review_id: 'REV-' + pad(db.counters.rev), application_id: a.application_id, faculty_id: FACULTY.id, review_status: 'Not started', created_at: iso });
+}
+
+function placeStep(db, a, to, who, iso, note) {
+  const opp = db.opportunities.find((o) => o.opportunity_id === a.opportunity_id);
+  const from = a.placement_status;
+  a.placement_status = to;
+  a.updated_at = iso;
+  a.history.push({ from_status: from, to_status: to, actor_role: who.role, actor_name: who.name, timestamp: iso, note: note || '', next_action: nextAction(a, opp) });
+  if (to === 'Placement confirmed') {
+    db.counters.plc++;
+    const plc = { placement_id: 'PLC-' + pad(db.counters.plc), application_id: a.application_id, student_id: a.student_id, opportunity_id: a.opportunity_id,
+      employer_id: opp.employer_id, profile_version_id: a.profile_version_id, confirmed_by: who.name, confirmed_at: iso, handoff_status: 'Sent to P07 (simulated)' };
+    db.placements.push(plc);
+    db.counters.ho++;
+    db.handoffs.push({ handoff_id: 'HO-' + pad(db.counters.ho), placement_id: plc.placement_id, target: 'P07 Learning progress', sent_at: iso, status: 'Sent to P07 (simulated)', payload: Object.assign({}, plc) });
+    return plc;
+  }
+  return null;
+}
+
+/* =====================================================================
+   3. Storage (one key, try/catch, memory fallback)
+   ===================================================================== */
+let DB = null;
+let storageOk = true;
+function validDb(d) {
+  return d && d.version === VERSION && ['employers', 'opportunities', 'students', 'applications', 'reviews', 'placements', 'handoffs'].every((k) => Array.isArray(d[k])) && d.counters;
+}
+function loadDb() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) { const d = JSON.parse(raw); if (validDb(d)) return d; }
+  } catch (e) { storageOk = false; }
+  const seeded = buildSeed();
+  persist(seeded);
+  return seeded;
+}
+function persist(d) {
+  if (!storageOk) { showStorageWarning(); return; }
+  try { localStorage.setItem(KEY, JSON.stringify(d)); }
+  catch (e) { storageOk = false; showStorageWarning(); }
+}
+function save() { persist(DB); }
+function showStorageWarning() { const el = $('storage-warning'); if (el) el.hidden = false; }
+
+/* =====================================================================
+   4. Lookups and derived values
+   ===================================================================== */
+const findOpp = (id) => DB.opportunities.find((o) => o.opportunity_id === id);
+const findEmp = (id) => DB.employers.find((e) => e.employer_id === id);
+const findStu = (id) => DB.students.find((s) => s.student_id === id);
+const findApp = (id) => DB.applications.find((a) => a.application_id === id);
+const reviewOf = (appId) => DB.reviews.find((r) => r.application_id === appId);
+const placementOf = (appId) => DB.placements.find((p) => p.application_id === appId);
+function profileOf(a) {
+  const s = findStu(a.student_id);
+  return s ? s.profile_versions.find((p) => p.profile_version_id === a.profile_version_id) : null;
+}
+const isActive = (a) => CLOSED_STATUSES.indexOf(a.application_status) === -1;   // BR-03 (Draft counts as active)
+const isSubmitted = (a) => a.application_status !== 'Draft';
+function activeAppFor(studentId, oppId, exceptId) {
+  return DB.applications.find((a) => a.student_id === studentId && a.opportunity_id === oppId && a.application_id !== exceptId && isActive(a));
+}
+function noResponseDays(a) {
+  if (a.application_status !== 'Submitted' && a.application_status !== 'Under Review') return null;
+  const base = a.last_employer_update_at || a.submitted_at;
+  if (!base) return null;
+  const n = dayDiff(new Date(), base);
+  return n >= 14 ? n : null;
+}
+function deadlineText(o) {
+  if (o.listing_status === 'Closed') return 'Closed';
+  const n = dayDiff(o.deadline, new Date());
+  if (n < 0) return 'Deadline passed';
+  if (n === 0) return 'Closes today';
+  return 'Closes in ' + plural(n, 'day', 'days');
+}
+
+function nextAction(a, opp) {
+  switch (a.application_status) {
+    case 'Draft': return 'Finish and submit before the deadline (' + fmtDate(opp && opp.deadline) + ').';
+    case 'Submitted': return 'Wait for the employer’s review. Most employers reply within 2 weeks.';
+    case 'Under Review': return 'The employer is reviewing your application.';
+    case 'Shortlisted': return 'You’re shortlisted. Watch for an interview invitation.';
+    case 'Interview Scheduled':
+      return a.interview ? 'Prepare for your interview on ' + fmtDateTime(a.interview.date_time) + ' (' + a.interview.mode + ').' : 'Prepare for your interview.';
+    case 'Offer Made': return 'Respond to the offer by accepting or declining.';
+    case 'Offer Accepted':
+      if (a.placement_status === 'Placement confirmed') return 'Your placement is confirmed. Your coop course and learning plan come next.';
+      if (a.placement_status === 'Placement not approved') return 'Contact Career Services about this decision.';
+      return 'Wait for the university to confirm your placement.';
+    case 'Offer Declined': return 'You declined this offer.';
+    case 'Declined': return 'This application is closed. Keep applying to other opportunities.';
+    case 'Withdrawn': return 'You withdrew this application.';
+    default: return '';
+  }
+}
+
+/* =====================================================================
+   5. The ONE status-change function (state machine, Part 3.4)
+   ===================================================================== */
+const TRANSITIONS = {
+  submit:             { label: 'Submit', from: ['Draft'], to: 'Submitted', role: 'Student' },
+  delete_draft:       { label: 'Delete draft', from: ['Draft'], to: null, role: 'Student' },
+  withdraw:           { label: 'Withdraw', from: ['Submitted', 'Under Review', 'Shortlisted', 'Interview Scheduled', 'Offer Made'], to: 'Withdrawn', role: 'Student' },
+  accept_offer:       { label: 'Accept offer', from: ['Offer Made'], to: 'Offer Accepted', role: 'Student' },
+  decline_offer:      { label: 'Decline offer', from: ['Offer Made'], to: 'Offer Declined', role: 'Student' },
+  start_review:       { label: 'Start review', from: ['Submitted'], to: 'Under Review', role: 'Employer reviewer' },
+  shortlist:          { label: 'Shortlist', from: ['Submitted', 'Under Review'], to: 'Shortlisted', role: 'Employer reviewer' },
+  schedule_interview: { label: 'Schedule interview', from: ['Under Review', 'Shortlisted'], to: 'Interview Scheduled', role: 'Employer reviewer', needs: 'interview' },
+  make_offer:         { label: 'Make offer', from: ['Under Review', 'Shortlisted', 'Interview Scheduled'], to: 'Offer Made', role: 'Employer reviewer' },
+  decline:            { label: 'Decline', from: ['Submitted', 'Under Review', 'Shortlisted', 'Interview Scheduled'], to: 'Declined', role: 'Employer reviewer', needs: 'reason' },
+  confirm_placement:  { label: 'Confirm placement', from: ['Offer Accepted'], placementFrom: ['Awaiting university confirmation'], placementTo: 'Placement confirmed', role: 'University Administrator' },
+  reject_placement:   { label: 'Do not approve', from: ['Offer Accepted'], placementFrom: ['Awaiting university confirmation'], placementTo: 'Placement not approved', role: 'University Administrator', needs: 'reason' },
+};
+function isAllowed(a, action) {
+  const t = TRANSITIONS[action];
+  return !!t && t.from.indexOf(a.application_status) !== -1 && (!t.placementFrom || t.placementFrom.indexOf(a.placement_status) !== -1);
+}
+function notAllowedMessage(a) {
+  return 'This action isn’t allowed from the current status (' + (a.application_status === 'Offer Accepted' ? a.placement_status : a.application_status) + ').';
+}
+
+function changeStatus(appId, action, actor, extra) {
+  extra = extra || {};
+  const t = TRANSITIONS[action];
+  const a = findApp(appId);
+  if (!t || !a) return { ok: false, msg: 'Application not found.' };
+  const opp = findOpp(a.opportunity_id);
+  // BR-07: each change is made only by the role that owns it
+  if (actor.role !== t.role) return { ok: false, msg: 'Only the ' + t.role + ' can do this.' };
+  if (actor.role === 'Student' && actor.student_id !== a.student_id) return { ok: false, msg: 'You can only change your own applications.' };
+  if (actor.role === 'Employer reviewer' && actor.employer_id !== opp.employer_id) return { ok: false, msg: 'This application belongs to another employer.' };
+  // BR-09: anything outside the state machine is blocked and nothing changes
+  if (!isAllowed(a, action)) return { ok: false, msg: notAllowedMessage(a) };
+  if (t.needs === 'reason' && !String(extra.reason || '').trim()) return { ok: false, field: 'reason', msg: 'Please enter a reason.' };
+  if (t.needs === 'interview') {
+    const iv = extra.interview || {};
+    const errs = {};
+    if (!iv.date) errs.date = 'Please choose a date.';
+    if (!iv.time) errs.time = 'Please choose a time.';
+    if (!iv.mode) errs.mode = 'Please choose a mode.';
+    if (!String(iv.location_or_link || '').trim()) errs.location_or_link = 'Please enter a location or link.';
+    if (Object.keys(errs).length) return { ok: false, errors: errs, msg: 'Please complete the interview details.' };
+  }
+  if (action === 'submit') {
+    const pv = extra.profile_version_id || a.profile_version_id;
+    if (opp.approval_status !== 'Approved') return { ok: false, msg: 'This opportunity is not open for applications.' };
+    if (opp.listing_status === 'Closed') return { ok: false, msg: 'This listing is closed. Applications are no longer accepted.' };
+    if (!pv) return { ok: false, field: 'profile', msg: 'Please choose a profile version.' };
+    if (activeAppFor(a.student_id, a.opportunity_id, a.application_id)) return { ok: false, msg: 'You already have an active application for this opportunity.' };
+  }
+
+  const now = new Date().toISOString();
+  if (action === 'delete_draft') {
+    DB.applications = DB.applications.filter((x) => x.application_id !== a.application_id);
+    save();
+    return { ok: true, deleted: true, app: a };
+  }
+  if (t.placementTo) {
+    const plc = placeStep(DB, a, t.placementTo, actor, now, t.needs === 'reason' ? 'Reason: ' + extra.reason.trim() : 'Placement confirmed. Placement record sent to P07 (simulated).');
+    if (t.needs === 'reason') a.placement_decision_reason = extra.reason.trim();
+    save();
+    return { ok: true, app: a, placement: plc };
+  }
+
+  const from = a.application_status;
+  let note = extra.note || '';
+  if (action === 'submit') {
+    if (extra.profile_version_id) a.profile_version_id = extra.profile_version_id;
+    if (extra.cover_note != null) a.cover_note = extra.cover_note;
+    a.submitted_at = now;
+    note = note || 'Submitted with profile ' + ((profileOf(a) || {}).label || a.profile_version_id) + '.';
+  }
+  if (action === 'schedule_interview') {
+    const iv = extra.interview;
+    a.interview = { date_time: new Date(iv.date + 'T' + iv.time).toISOString(), mode: iv.mode, location_or_link: iv.location_or_link.trim(), notes: (iv.notes || '').trim() };
+    note = note || 'Interview on ' + fmtDateTime(a.interview.date_time) + ' (' + a.interview.mode + '), ' + a.interview.location_or_link + '.';
+  }
+  if (action === 'decline') { a.decline_reason = extra.reason.trim(); note = 'Reason: ' + a.decline_reason; }
+  if (action === 'accept_offer') a.placement_status = 'Awaiting university confirmation';
+  a.application_status = t.to;
+  if (t.role === 'Employer reviewer') a.last_employer_update_at = now;
+  a.updated_at = now;
+  a.history.push({ from_status: from, to_status: t.to, actor_role: actor.role, actor_name: actor.name, timestamp: now, note: note, next_action: nextAction(a, opp) });
+  if (action === 'submit') addReview(DB, a, now);   // BR-11
+  save();
+  return { ok: true, app: a };
+}
+
+/* Create a new application (as a Draft or straight to Submitted). */
+function createApplication(studentId, oppId, pv, coverNote, status, actor) {
+  const opp = findOpp(oppId);
+  if (!opp || opp.approval_status !== 'Approved') return { ok: false, msg: 'This opportunity is not open for applications.' };
+  if (opp.listing_status === 'Closed') return { ok: false, msg: 'This listing is closed. Applications are no longer accepted.' };
+  if (activeAppFor(studentId, oppId)) return { ok: false, msg: 'You already have an active application for this opportunity.' };
+  if (status === 'Submitted' && !pv) return { ok: false, field: 'profile', msg: 'Please choose a profile version.' };
+  const now = new Date().toISOString();
+  DB.counters.app++;
+  const a = { application_id: 'APP-' + pad(DB.counters.app), student_id: studentId, opportunity_id: oppId, profile_version_id: pv || null, cover_note: coverNote || '',
+    application_status: status, placement_status: 'Not placed', interview: null, decline_reason: null, placement_decision_reason: null,
+    created_at: now, submitted_at: status === 'Submitted' ? now : null, last_employer_update_at: null, updated_at: now, history: [] };
+  DB.applications.push(a);
+  const pvLabel = pv ? (profileOf(a) || {}).label : '';
+  a.history.push({ from_status: '(new)', to_status: status, actor_role: actor.role, actor_name: actor.name, timestamp: now,
+    note: status === 'Submitted' ? 'Submitted with profile ' + pvLabel + '.' : 'Draft saved.', next_action: nextAction(a, opp) });
+  if (status === 'Submitted') addReview(DB, a, now);
+  save();
+  return { ok: true, app: a };
+}
+
+function updateDraft(appId, pv, coverNote, actor) {
+  const a = findApp(appId);
+  if (!a || a.application_status !== 'Draft' || a.student_id !== actor.student_id) return { ok: false, msg: 'This draft can’t be edited.' };
+  a.profile_version_id = pv || a.profile_version_id;
+  a.cover_note = coverNote;
+  a.updated_at = new Date().toISOString();
+  save();
+  return { ok: true, app: a };
+}
+
+/* =====================================================================
+   6. UI state
+   ===================================================================== */
+const DEFAULT_PAGE = { student: 'home', employer: 'emp-review', admin: 'adm-listings', faculty: 'fac-dash' };
+function freshUi() {
+  return {
+    role: 'student', page: 'home', params: {}, studentId: 'STU-002', employerId: 'EMPL-004', compare: [],
+    opp: { q: '', sector: '', location: '', modes: [], duration: '', showClosed: false },
+    appsTab: 'all', homeTab: 'next',
+    fac: { q: '', student: '', status: '', placement: '', employer: '' },
+    flash: null,
+  };
+}
+let ui = freshUi();
+
+function actor() {
+  if (ui.role === 'student') { const s = findStu(ui.studentId); return { role: 'Student', name: s.display_name, student_id: s.student_id }; }
+  if (ui.role === 'employer') { const e = findEmp(ui.employerId); return { role: 'Employer reviewer', name: e.hr_contact_name + ' (' + e.name + ')', employer_id: e.employer_id }; }
+  if (ui.role === 'admin') return ADMIN;
+  return { role: 'Faculty Reviewer', name: FACULTY.name };
+}
+function setFlash(type, text) { ui.flash = { type, text }; }
+
+/* =====================================================================
+   7. Shared UI pieces
+   ===================================================================== */
+const TONE = {
+  'Draft': 'secondary', 'Not placed': 'secondary', 'Not started': 'secondary', 'Withdrawn': 'secondary',
+  'Submitted': 'blue', 'Under Review': 'blue',
+  'Shortlisted': 'teal', 'Interview Scheduled': 'teal',
+  'Offer Made': 'orange', 'Awaiting university confirmation': 'orange',
+  'Offer Accepted': 'green', 'Placement confirmed': 'green', 'Approved': 'green', 'Open': 'green',
+  'Declined': 'red', 'Offer Declined': 'red', 'Placement not approved': 'red', 'Closed': 'red',
+  'Pending Review': 'yellow',
+};
+function pill(status, label) { return '<span class="badge bg-' + (TONE[status] || 'secondary') + '-lt">' + esc(label || status) + '</span>'; }
+function appPill(a) { return a.application_status === 'Draft' ? pill('Draft', 'Draft – not submitted') : pill(a.application_status); }
+function flagPill(a) { const n = noResponseDays(a); return n == null ? '' : '<span class="badge bg-orange-lt">No response yet – ' + n + ' days</span>'; }
+function nav(page, params, label, cls) {
+  const attrs = Object.keys(params || {}).map((k) => ' data-' + k + '="' + esc(params[k]) + '"').join('');
+  return '<a href="#" class="' + (cls || '') + '" data-nav="' + page + '"' + attrs + '>' + label + '</a>';
+}
+function navBtn(page, params, label, cls) {
+  const attrs = Object.keys(params || {}).map((k) => ' data-' + k + '="' + esc(params[k]) + '"').join('');
+  return '<button type="button" class="btn ' + (cls || '') + '" data-nav="' + page + '"' + attrs + '>' + label + '</button>';
+}
+function empty(title, sub, action) {
+  return '<div class="empty"><p class="empty-title">' + esc(title) + '</p>' + (sub ? '<p class="text-secondary mb-0 mt-1">' + esc(sub) + '</p>' : '') + (action ? '<div class="mt-3">' + action + '</div>' : '') + '</div>';
+}
+function card(title, body, opts) {
+  opts = opts || {};
+  return '<div class="card ' + (opts.cls || '') + '">' + (title ? '<div class="card-header"><h2 class="card-title">' + title + '</h2>' + (opts.actions ? '<div class="card-actions">' + opts.actions + '</div>' : '') + '</div>' : '') +
+    (opts.raw ? body : '<div class="card-body">' + body + '</div>') + (opts.footer ? '<div class="card-footer">' + opts.footer + '</div>' : '') + '</div>';
+}
+function tableWrap(label, head, rows) {
+  return '<div class="table-responsive" tabindex="0" aria-label="' + esc(label) + '"><table class="table table-vcenter card-table">' +
+    '<thead><tr>' + head.map((h) => '<th>' + h + '</th>').join('') + '</tr></thead><tbody>' + rows.join('') + '</tbody></table></div>';
+}
+function placementNote() { return '<p class="text-secondary mb-0">An application or accepted offer is not a placement. Only the university confirms placements.</p>'; }
+const FACULTY_NOTE = 'Viewing an application does not approve a placement. Placements are confirmed only by the university.';
+
+function timeline(a) {
+  const entries = a.history.slice().reverse();
+  return '<div class="divide-y">' + entries.map((e) => {
+    const isPlacement = PLACEMENT_STATUSES.indexOf(e.to_status) !== -1;
+    const to = e.to_status === 'Draft' ? pill('Draft', 'Draft – not submitted') : pill(e.to_status);
+    return '<div><div class="row g-3">' +
+      '<div class="col-auto"><span class="avatar avatar-sm" aria-hidden="true">' + esc(initials(e.actor_name)) + '</span></div>' +
+      '<div class="col">' +
+        '<div class="d-flex flex-wrap align-items-center gap-2">' + to + '<span class="text-secondary small">' + (isPlacement ? 'Placement status' : 'Application status') + ' changed from ' + esc(e.from_status) + '</span></div>' +
+        '<div class="small mt-1"><strong>' + esc(e.actor_name) + '</strong>, ' + esc(e.actor_role) + ', ' + esc(fmtDateTime(e.timestamp)) + '</div>' +
+        (e.note ? '<div class="history-note">' + esc(e.note) + '</div>' : '') +
+        (e.next_action ? '<div class="small text-secondary mt-1">Next action shown to the student: ' + esc(e.next_action) + '</div>' : '') +
+      '</div></div></div>';
+  }).join('') + '</div>';
+}
+
+function factsList(pairs) {
+  return '<dl class="facts row g-3 mb-0">' + pairs.map(([k, v]) => '<div class="col-6 col-md-4"><dt>' + esc(k) + '</dt><dd>' + v + '</dd></div>').join('') + '</dl>';
+}
+function interviewCard(a) {
+  if (!a.interview) return '';
+  const iv = a.interview;
+  const past = new Date(iv.date_time) < new Date();
+  return card('Interview' + (past ? ' (past)' : ''), factsList([
+    ['Date', esc(fmtDate(iv.date_time))], ['Time', esc(fmtTime(iv.date_time))], ['Mode', esc(iv.mode)],
+    ['Location or link', esc(iv.location_or_link)], ['Notes', esc(iv.notes || '–')],
+  ]), { cls: 'mb-3' });
+}
+
+function field(type, name, label, opts) {
+  opts = opts || {};
+  const id = 'f-' + name;
+  const req = opts.required ? ' required' : '';
+  let control;
+  if (type === 'textarea') control = '<textarea class="form-control" id="' + id + '" name="' + name + '" rows="' + (opts.rows || 4) + '"' + (opts.maxlength ? ' maxlength="' + opts.maxlength + '"' : '') + ' aria-describedby="err-' + name + '">' + esc(opts.value || '') + '</textarea>';
+  else if (type === 'select') control = '<select class="form-select" id="' + id + '" name="' + name + '" aria-describedby="err-' + name + '">' + opts.options.map((o) => { const v = Array.isArray(o) ? o[0] : o; const l = Array.isArray(o) ? o[1] : o; return '<option value="' + esc(v) + '"' + (String(v) === String(opts.value || '') ? ' selected' : '') + '>' + esc(l) + '</option>'; }).join('') + '</select>';
+  else control = '<input class="form-control" type="' + type + '" id="' + id + '" name="' + name + '" value="' + esc(opts.value || '') + '"' + (opts.placeholder ? ' placeholder="' + esc(opts.placeholder) + '"' : '') + ' aria-describedby="err-' + name + '">';
+  return '<div class="mb-3"><label class="form-label' + (opts.required ? ' required' : '') + '" for="' + id + '">' + esc(label) + '</label>' + control +
+    '<div class="invalid-feedback" id="err-' + name + '"></div>' + (opts.hint ? '<div class="form-hint">' + esc(opts.hint) + '</div>' : '') + '</div>';
+}
+function showErrors(scope, errors) {
+  scope.querySelectorAll('.is-invalid').forEach((el) => el.classList.remove('is-invalid'));
+  scope.querySelectorAll('.invalid-feedback').forEach((el) => { el.textContent = ''; el.classList.remove('d-block'); });
+  let first = null;
+  Object.keys(errors).forEach((name) => {
+    const fb = scope.querySelector('#err-' + name);
+    if (fb) { fb.textContent = errors[name]; fb.classList.add('d-block'); }
+    const el = scope.querySelector('[name="' + name + '"]');
+    if (el) { if (el.type !== 'radio') el.classList.add('is-invalid'); el.setAttribute('aria-invalid', 'true'); if (!first) first = el; }
+  });
+  if (first) first.focus();
+}
+
+/* =====================================================================
+   8. Student pages
+   ===================================================================== */
+function myApps() { return DB.applications.filter((a) => a.student_id === ui.studentId); }
+function acceptedNotice() {
+  const mine = myApps();
+  const accepted = mine.find((a) => a.application_status === 'Offer Accepted');
+  if (!accepted) return '';
+  const others = mine.filter((a) => a !== accepted && isActive(a) && a.application_status !== 'Offer Accepted');
+  if (!others.length) return '';
+  return '<div class="alert alert-warning mb-3" role="status">You have accepted an offer. Consider withdrawing your other active applications.</div>';
+}
+
+function pStudentHome() {
+  const s = findStu(ui.studentId);
+  const apps = myApps();
+  const active = apps.filter((a) => isSubmitted(a) && isActive(a));
+  const interviews = apps.filter((a) => a.application_status === 'Interview Scheduled' && a.interview && new Date(a.interview.date_time) >= startOfDay(new Date()));
+  const offers = apps.filter((a) => a.application_status === 'Offer Made');
+  const first = s.display_name.split(' ')[0];
+  const stat = (label, value, page, linkLabel) => '<div class="col-sm-4"><div class="card card-sm h-100"><div class="card-body">' +
+    '<div class="subheader">' + label + '</div><div class="stat-value mt-1">' + value + '</div><div class="mt-2 small">' + nav(page, {}, linkLabel) + '</div></div></div></div>';
+
+  const tabs = [['next', 'Next steps'], ['updates', 'Recent updates'], ['recommended', 'Recommended for you']];
+  let panel = '';
+  if (ui.homeTab === 'next') {
+    const list = apps.filter((a) => isActive(a)).sort((x, y) => new Date(y.updated_at) - new Date(x.updated_at));
+    panel = list.length ? tableWrap('Next steps', ['Application', 'Opportunity', 'Status', 'Next action'], list.map((a) => {
+      const o = findOpp(a.opportunity_id);
+      return '<tr><td>' + nav('app', { id: a.application_id }, esc(a.application_id)) + '</td><td>' + esc(o.title) + '<div class="text-secondary small">' + esc(findEmp(o.employer_id).name) + '</div></td>' +
+        '<td><div class="d-flex flex-wrap gap-1">' + appPill(a) + flagPill(a) + '</div></td><td>' + esc(nextAction(a, o)) + '</td></tr>';
+    })) : '<div class="card-body">' + empty('You haven’t applied to any opportunities yet.', 'Browse approved opportunities and apply with one of your profile versions.', navBtn('opps', {}, 'Browse opportunities', 'btn-primary')) + '</div>';
+  } else if (ui.homeTab === 'updates') {
+    const entries = [];
+    apps.filter(isSubmitted).forEach((a) => a.history.forEach((e) => entries.push({ a, e })));
+    entries.sort((x, y) => new Date(y.e.timestamp) - new Date(x.e.timestamp));
+    panel = entries.length ? '<div class="card-body"><div class="divide-y">' + entries.slice(0, 6).map(({ a, e }) =>
+      '<div><div class="d-flex flex-wrap align-items-center gap-2">' + pill(e.to_status, e.to_status === 'Draft' ? 'Draft – not submitted' : null) + nav('app', { id: a.application_id }, esc(a.application_id)) +
+      '<span class="text-secondary small">' + esc(findOpp(a.opportunity_id).title) + '</span></div><div class="small text-secondary mt-1">' + esc(e.actor_name) + ', ' + esc(e.actor_role) + ', ' + esc(fmtDateTime(e.timestamp)) + '</div></div>').join('') + '</div></div>'
+      : '<div class="card-body">' + empty('No updates yet.', 'Updates appear here when employers or the university change your applications.') + '</div>';
+  } else {
+    const recs = DB.opportunities.filter((o) => o.recommendation && o.approval_status === 'Approved' && o.listing_status === 'Open');
+    panel = '<div class="card-body"><p class="text-secondary small">Simulated P05 recommendations. P05 owns matching; this is sample data.</p><div class="divide-y">' + recs.map((o) =>
+      '<div><div class="d-flex flex-wrap justify-content-between gap-2"><div>' + nav('opp', { id: o.opportunity_id }, esc(o.title), 'fw-medium') + '<div class="text-secondary small">' + esc(findEmp(o.employer_id).name) + ', ' + esc(o.opportunity_id) + '</div></div><div class="small text-secondary">' + esc(deadlineText(o)) + '</div></div>' +
+      '<ul class="small mb-0 mt-2">' + o.recommendation.reasons.map((r) => '<li>' + esc(r) + '</li>').join('') + '<li>Skill gap: ' + esc(o.recommendation.skill_gap) + '</li></ul></div>').join('') + '</div></div>';
+  }
+
+  return {
+    title: 'Home', crumbs: [['Student'], ['Home']],
+    body:
+      '<div class="card ipp-hero mb-4"><div class="card-body p-4"><h2 class="h2 mb-1">Welcome back, ' + esc(first) + '</h2>' +
+      '<p class="ipp-hero-sub mb-0">' + esc(s.program + ', Year ' + s.year) + '. You have ' + plural(active.length, 'active application', 'active applications') + '.</p></div></div>' +
+      '<div class="row row-cards mb-4">' +
+        stat('Active applications', active.length, 'apps', 'View my applications') +
+        stat('Interviews coming up', interviews.length, 'apps', interviews.length ? 'See interview details' : 'View my applications') +
+        stat('Offers to respond to', offers.length, 'apps', 'View my applications') +
+      '</div>' +
+      acceptedNotice() +
+      '<div class="card"><div class="card-header"><ul class="nav nav-tabs card-header-tabs" role="tablist">' + tabs.map(([k, l]) =>
+        '<li class="nav-item" role="presentation"><button type="button" class="nav-link' + (ui.homeTab === k ? ' active' : '') + '" role="tab" aria-selected="' + (ui.homeTab === k) + '" data-action="home-tab" data-tab="' + k + '">' + l + '</button></li>').join('') +
+      '</ul></div>' + panel + '</div>',
+  };
+}
+
+/* ---- Opportunities ---- */
+function studentOpps() { return DB.opportunities.filter((o) => o.approval_status === 'Approved'); }   // BR-01
+function filteredOpps() {
+  const f = ui.opp;
+  const q = norm(f.q);
+  return studentOpps().filter((o) => {
+    const e = findEmp(o.employer_id);
+    if (o.listing_status === 'Closed' && !f.showClosed) return false;
+    if (f.sector && e.sector !== f.sector) return false;
+    if (f.location && o.location !== f.location) return false;
+    if (f.modes.length && f.modes.indexOf(o.work_mode) === -1) return false;
+    if (f.duration && o.duration !== f.duration) return false;
+    if (q) {
+      const hay = norm([o.title, e.name, e.sector, o.description, o.skills.join(' '), o.opportunity_id, o.location].join(' '));
+      if (hay.indexOf(q) === -1) return false;
     }
-  }
-  function save(d) {
-    memoryCopy = clone(d);
-    if (!storageOk) return;
-    try { localStorage.setItem(STORE_KEY, JSON.stringify(d)); }
-    catch (e) { storageOk = false; showStorageWarning(); }
-  }
-  function showStorageWarning() {
-    var el = document.getElementById('storage-warning');
-    if (el) el.hidden = false;
-  }
+    return true;
+  }).sort((a, b) => (a.listing_status === 'Closed') - (b.listing_status === 'Closed') || new Date(a.deadline) - new Date(b.deadline));
+}
+function oppTags(o) {
+  const tags = [];
+  const a = activeAppFor(ui.studentId, o.opportunity_id);
+  if (a) tags.push(a.application_status === 'Draft' ? '<span class="badge bg-secondary-lt">Draft</span>' : '<span class="badge bg-blue-lt">Applied</span>');
+  if (o.listing_status === 'Closed') tags.push(pill('Closed'));
+  if (o.recommendation) tags.push('<span class="badge bg-green-lt">Recommended (P05)</span>');
+  return tags.join(' ');
+}
+function oppCard(o) {
+  const e = findEmp(o.employer_id);
+  const checked = ui.compare.indexOf(o.opportunity_id) !== -1;
+  return '<div class="card"><div class="row g-0">' +
+    '<div class="col-auto"><div class="card-body"><span class="avatar avatar-md bg-green-lt" aria-hidden="true">' + esc(initials(e.name)) + '</span></div></div>' +
+    '<div class="col"><div class="card-body ps-0">' +
+      '<div class="row"><div class="col"><h2 class="h3 mb-0">' + nav('opp', { id: o.opportunity_id }, esc(o.title)) + '</h2>' +
+        '<div class="text-secondary small mt-1">' + esc(e.name) + ', ' + esc(e.sector) + '</div></div>' +
+        '<div class="col-auto fs-3 text-green fw-medium">' + esc(o.stipend) + '</div></div>' +
+      '<div class="meta-list mt-2 text-secondary small">' +
+        '<span>' + icon('pin', 'icon-inline') + ' <span class="visually-hidden">Location: </span>' + esc(o.location) + '</span>' +
+        '<span>' + icon('mode', 'icon-inline') + ' <span class="visually-hidden">Work mode: </span>' + esc(o.work_mode) + '</span>' +
+        '<span>' + icon('clock', 'icon-inline') + ' <span class="visually-hidden">Duration: </span>' + esc(o.duration) + '</span>' +
+        '<span>' + icon('calendar', 'icon-inline') + ' <span class="visually-hidden">Deadline: </span>' + esc(deadlineText(o)) + '</span>' +
+        '<span class="text-secondary">' + esc(o.opportunity_id) + '</span>' +
+      '</div>' +
+      '<div class="d-flex flex-wrap align-items-center gap-2 mt-3">' +
+        '<label class="form-check mb-0"><input type="checkbox" class="form-check-input" data-compare="' + o.opportunity_id + '"' + (checked ? ' checked' : '') + ' aria-label="Compare ' + esc(o.title) + '"><span class="form-check-label">Compare</span></label>' +
+        '<span class="ms-2 d-flex flex-wrap gap-1">' + oppTags(o) + o.skills.slice(0, 3).map((s) => '<span class="badge badge-outline text-secondary fw-normal badge-pill">' + esc(s) + '</span>').join(' ') + '</span>' +
+      '</div>' +
+    '</div></div></div></div>';
+}
+function renderOppResults() {
+  const list = filteredOpps();
+  const res = $('opp-results');
+  if (!res) return;
+  $('opp-count').textContent = list.length === 1 ? '1 opportunity' : list.length + ' opportunities';
+  res.innerHTML = list.length ? '<div class="space-y">' + list.map(oppCard).join('') + '</div>' : empty('No opportunities match your search.', 'Try a different word or clear some filters.');
+  updateCompareUi();
+}
+function updateCompareUi() {
+  const b = $('compare-btn');
+  if (b) { b.textContent = 'Compare (' + ui.compare.length + ')'; b.disabled = ui.compare.length !== 2; }
+  const m = document.querySelector('[data-nav="compare"].nav-link .nav-link-title');
+  if (m) m.textContent = 'Compare (' + ui.compare.length + ')';
+}
+function pOpps() {
+  const opps = studentOpps();
+  const sectors = Array.from(new Set(opps.map((o) => findEmp(o.employer_id).sector))).sort();
+  const f = ui.opp;
+  const opt = (v, l, cur) => '<option value="' + esc(v) + '"' + (v === cur ? ' selected' : '') + '>' + esc(l) + '</option>';
+  const filters =
+    '<form id="opp-filters" class="sticky-md-top" novalidate>' +
+      '<div class="mb-3"><label class="form-label" for="flt-sector">Sector</label><select class="form-select" id="flt-sector" data-filter="sector">' + opt('', 'All sectors', f.sector) + sectors.map((s) => opt(s, s, f.sector)).join('') + '</select></div>' +
+      '<div class="mb-3"><label class="form-label" for="flt-location">Location</label><select class="form-select" id="flt-location" data-filter="location">' + opt('', 'Anywhere', f.location) + ['Abu Dhabi', 'Dubai', 'Remote'].map((s) => opt(s, s, f.location)).join('') + '</select></div>' +
+      '<fieldset class="mb-3"><legend class="form-label">Work mode</legend>' + ['On-site', 'Hybrid', 'Remote'].map((m) =>
+        '<label class="form-check"><input type="checkbox" class="form-check-input" data-filter="mode" value="' + m + '"' + (f.modes.indexOf(m) !== -1 ? ' checked' : '') + '><span class="form-check-label">' + m + '</span></label>').join('') + '</fieldset>' +
+      '<div class="mb-3"><label class="form-label" for="flt-duration">Duration</label><select class="form-select" id="flt-duration" data-filter="duration">' + opt('', 'Any duration', f.duration) + ['8 weeks', '10 weeks', '12 weeks', '16 weeks'].map((s) => opt(s, s, f.duration)).join('') + '</select></div>' +
+      '<label class="form-check form-switch mb-3"><input type="checkbox" class="form-check-input" data-filter="closed"' + (f.showClosed ? ' checked' : '') + '><span class="form-check-label">Show closed listings</span></label>' +
+      '<button type="button" class="btn btn-link" data-action="reset-filters">Reset filters</button>' +
+    '</form>';
+  return {
+    title: 'Opportunities', crumbs: [['Student', 'home'], ['Opportunities']],
+    body:
+      '<div class="row g-4">' +
+        '<div class="col-md-3">' + filters + '</div>' +
+        '<div class="col-md-9">' +
+          '<div class="d-flex flex-wrap align-items-end gap-2 mb-3">' +
+            '<div class="flex-grow-1"><label class="form-label" for="opp-q">Search opportunities</label><div class="input-icon"><span class="input-icon-addon">' + icon('search') + '</span>' +
+            '<input type="search" class="form-control" id="opp-q" value="' + esc(f.q) + '" placeholder="Search by title, organization or keyword" autocomplete="off"></div></div>' +
+            '<button type="button" class="btn" id="compare-btn" data-nav="compare">Compare (0)</button>' +
+          '</div>' +
+          '<div class="d-flex flex-wrap justify-content-between gap-2 mb-2"><p class="text-secondary mb-0" id="opp-count" aria-live="polite"></p><p class="text-secondary small mb-0">Tick Compare on two listings to compare them side by side.</p></div>' +
+          '<div id="compare-msg" aria-live="polite"></div>' +
+          '<div id="opp-results"></div>' +
+        '</div>' +
+      '</div>',
+    after: renderOppResults,
+  };
+}
 
-  /* ---------- Helpers ---------- */
-  function $(id) { return document.getElementById(id); }
-  function esc(s) {
-    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-    });
+function oppActionArea(o) {
+  const a = activeAppFor(ui.studentId, o.opportunity_id);
+  let html = '';
+  if (o.listing_status === 'Closed') {
+    html += '<div class="alert alert-danger mb-3" role="status">This listing is closed. Applications are no longer accepted.</div>';
+    html += a ? navBtn('app', { id: a.application_id }, 'View my ' + (a.application_status === 'Draft' ? 'draft' : 'application'), 'w-100') : '<button type="button" class="btn w-100" disabled>Closed</button>';
+    return html;
   }
-  function normalize(s) { return String(s || '').toLowerCase().replace(/\s+/g, ' ').trim(); }
-  function orgName(d, employerId) {
-    for (var i = 0; i < d.employers.length; i++) if (d.employers[i].employer_id === employerId) return d.employers[i].organization_name;
-    return 'Unknown organization';
+  if (a && a.application_status === 'Draft') return navBtn('apply', { id: o.opportunity_id, app: a.application_id }, 'Continue draft', 'btn-primary w-100') + '<p class="text-secondary small mt-2 mb-0">You have a draft (' + esc(a.application_id) + '). Drafts are private until you submit.</p>';
+  if (a) return navBtn('app', { id: a.application_id }, 'Already applied – view application', 'w-100') + '<p class="text-secondary small mt-2 mb-0">You already have an active application for this opportunity.</p>';
+  return navBtn('apply', { id: o.opportunity_id }, 'Apply', 'btn-primary w-100');
+}
+function pOppDetail(p) {
+  const o = findOpp(p.id);
+  if (!o || o.approval_status !== 'Approved') return notFound('This opportunity is not available.', 'opps', 'Back to opportunities');
+  const e = findEmp(o.employer_id);
+  const inCompare = ui.compare.indexOf(o.opportunity_id) !== -1;
+  const rec = o.recommendation ? card('Recommended for you (P05)', '<p class="text-secondary small">Simulated P05 recommendation. P05 owns matching; this is sample data.</p><ul class="mb-2">' + o.recommendation.reasons.map((r) => '<li>' + esc(r) + '</li>').join('') + '</ul><div><span class="text-secondary">Skill gap:</span> ' + esc(o.recommendation.skill_gap) + '</div>', { cls: 'mb-3' }) : '';
+  return {
+    title: o.title, crumbs: [['Student', 'home'], ['Opportunities', 'opps'], [o.opportunity_id]],
+    badges: pill(o.listing_status) + ' ' + (o.recommendation ? '<span class="badge bg-green-lt">Recommended (P05)</span>' : ''),
+    body:
+      '<div class="mb-3">' + nav('opps', {}, icon('back', 'icon-inline') + ' Back to opportunities') + '</div>' +
+      '<div class="row g-4">' +
+        '<div class="col-lg-8">' +
+          card(esc(e.name), '<p>' + esc(o.description) + '</p>' +
+            '<h3 class="h4 mt-4">Responsibilities</h3><ul>' + o.responsibilities.map((r) => '<li>' + esc(r) + '</li>').join('') + '</ul>' +
+            '<h3 class="h4 mt-4">Requirements</h3><ul>' + o.requirements.map((r) => '<li>' + esc(r) + '</li>').join('') + '</ul>' +
+            '<h3 class="h4 mt-4">Skills</h3><div class="d-flex flex-wrap gap-1">' + o.skills.map((s) => '<span class="badge badge-outline text-secondary fw-normal badge-pill">' + esc(s) + '</span>').join('') + '</div>') +
+        '</div>' +
+        '<div class="col-lg-4">' +
+          card('Apply', oppActionArea(o) + '<label class="form-check mt-3 mb-0"><input type="checkbox" class="form-check-input" data-compare="' + o.opportunity_id + '"' + (inCompare ? ' checked' : '') + '><span class="form-check-label">Add to compare (' + ui.compare.length + ' of 2)</span></label><div id="compare-msg" class="mt-2" aria-live="polite"></div>', { cls: 'mb-3' }) +
+          card('Key facts', '<dl class="facts mb-0">' + [
+            ['Opportunity ID', o.opportunity_id], ['Organization', e.name], ['Sector', e.sector], ['Location', o.location], ['Work mode', o.work_mode],
+            ['Duration', o.duration], ['Stipend', o.stipend], ['Positions', o.positions], ['Posted', fmtDate(o.posted_at)], ['Deadline', fmtDate(o.deadline) + ' (' + deadlineText(o) + ')'],
+          ].map(([k, v]) => '<dt>' + esc(k) + '</dt><dd>' + esc(v) + '</dd>').join('') + '</dl>', { cls: 'mb-3' }) +
+          rec +
+        '</div>' +
+      '</div>',
+  };
+}
+
+function pCompare() {
+  const list = ui.compare.map(findOpp).filter(Boolean);
+  if (list.length < 2) {
+    return { title: 'Compare', crumbs: [['Student', 'home'], ['Compare']],
+      body: card('', empty('Pick two opportunities to compare.', 'Tick Compare on two listings on the Opportunities page.', navBtn('opps', {}, 'Go to opportunities', 'btn-primary'))) };
   }
-  function findOpp(d, id) {
-    for (var i = 0; i < d.opportunities.length; i++) if (d.opportunities[i].opportunity_id === id) return d.opportunities[i];
+  const rows = [
+    ['Organization', (o) => esc(findEmp(o.employer_id).name)], ['Sector', (o) => esc(findEmp(o.employer_id).sector)], ['Opportunity ID', (o) => esc(o.opportunity_id)],
+    ['Location', (o) => esc(o.location)], ['Work mode', (o) => esc(o.work_mode)], ['Duration', (o) => esc(o.duration)], ['Stipend', (o) => esc(o.stipend)],
+    ['Positions', (o) => esc(o.positions)], ['Deadline', (o) => esc(fmtDate(o.deadline)) + '<div class="small text-secondary">' + esc(deadlineText(o)) + '</div>'],
+    ['Listing', (o) => pill(o.listing_status)], ['Skills', (o) => esc(o.skills.join(', '))],
+    ['Requirements', (o) => '<ul class="mb-0">' + o.requirements.map((r) => '<li>' + esc(r) + '</li>').join('') + '</ul>'],
+    ['P05 recommendation', (o) => o.recommendation ? esc(o.recommendation.reasons.join('; ')) + '<div class="small text-secondary">Skill gap: ' + esc(o.recommendation.skill_gap) + '</div>' : '–'],
+    ['My application', (o) => { const a = activeAppFor(ui.studentId, o.opportunity_id); return a ? nav('app', { id: a.application_id }, esc(a.application_id)) + ' ' + appPill(a) : 'None'; }],
+  ];
+  return {
+    title: 'Compare opportunities', crumbs: [['Student', 'home'], ['Opportunities', 'opps'], ['Compare']],
+    body: card('Side-by-side comparison',
+      '<div class="table-responsive" tabindex="0" aria-label="Comparison table"><table class="table card-table compare-table"><thead><tr><th scope="col"><span class="visually-hidden">Field</span></th>' +
+      list.map((o) => '<th scope="col">' + nav('opp', { id: o.opportunity_id }, esc(o.title)) + '</th>').join('') + '</tr></thead><tbody>' +
+      rows.map(([k, fn]) => '<tr><th scope="row">' + esc(k) + '</th>' + list.map((o) => '<td>' + fn(o) + '</td>').join('') + '</tr>').join('') + '</tbody></table></div>',
+      { raw: true, actions: '<button type="button" class="btn btn-sm" data-action="clear-compare">Clear comparison</button>' }),
+  };
+}
+
+/* ---- Apply ---- */
+function pApply(p) {
+  const o = findOpp(p.id);
+  if (!o || o.approval_status !== 'Approved') return notFound('This opportunity is not available.', 'opps', 'Back to opportunities');
+  const e = findEmp(o.employer_id);
+  const s = findStu(ui.studentId);
+  const draft = p.app ? findApp(p.app) : null;
+  const crumbs = [['Student', 'home'], ['Opportunities', 'opps'], [o.opportunity_id, 'opp', { id: o.opportunity_id }], ['Apply']];
+  if (draft && (draft.application_status !== 'Draft' || draft.student_id !== ui.studentId)) return notFound('This draft can’t be edited.', 'apps', 'Go to my applications');
+  if (o.listing_status === 'Closed') return { title: 'Apply', crumbs, body: '<div class="alert alert-danger" role="alert">This listing is closed. Applications are no longer accepted.</div>' + navBtn('opp', { id: o.opportunity_id }, 'Back to the listing') };
+  const existing = activeAppFor(ui.studentId, o.opportunity_id, draft ? draft.application_id : undefined);
+  if (existing) return { title: 'Apply', crumbs, body: '<div class="alert alert-warning" role="alert">You already have an active application for this opportunity.</div>' + navBtn('app', { id: existing.application_id }, 'View application ' + existing.application_id) };
+  const chosen = draft ? draft.profile_version_id : '';
+  return {
+    title: draft ? 'Continue draft ' + draft.application_id : 'Apply', crumbs,
+    body:
+      '<form id="apply-form" novalidate>' +
+      card('Apply to ' + esc(o.title), '<p class="text-secondary">' + esc(e.name) + ', ' + esc(o.opportunity_id) + '. ' + esc(deadlineText(o)) + ' (' + esc(fmtDate(o.deadline)) + ').</p>' +
+        '<fieldset class="mb-4"><legend class="form-label required">Profile version (from P01)</legend>' +
+        '<div class="row g-3">' + s.profile_versions.map((pv) =>
+          '<div class="col-md-6"><label class="pv-option"><input type="radio" name="profile" value="' + pv.profile_version_id + '"' + (chosen === pv.profile_version_id ? ' checked' : '') + ' aria-describedby="err-profile">' +
+          '<span><span class="fw-medium d-block">' + esc(pv.label) + '</span><span class="small text-secondary d-block">' + esc(pv.profile_version_id) + ', ' + esc(pv.cv_file) + '</span>' +
+          '<span class="small d-block mt-2">' + esc(pv.summary) + '</span><span class="d-flex flex-wrap gap-1 mt-2">' + pv.skills.map((k) => '<span class="badge badge-outline text-secondary fw-normal">' + esc(k) + '</span>').join('') + '</span></span></label></div>').join('') +
+        '</div><div class="invalid-feedback" id="err-profile"></div></fieldset>' +
+        field('textarea', 'cover_note', 'Cover note (optional)', { value: draft ? draft.cover_note : '', rows: 4, maxlength: 1000, hint: 'Up to 1,000 characters. The employer sees this with your profile.' }) +
+        '<p class="text-secondary small mb-0">Submitting does not approve a placement. Only the university confirms placements.</p>',
+        { footer: '<div class="btn-list justify-content-end">' + navBtn('opp', { id: o.opportunity_id }, 'Cancel', 'btn-ghost-secondary') +
+          '<button type="button" class="btn" data-action="save-draft">Save draft</button><button type="submit" class="btn btn-primary">Submit application</button></div>' }) +
+      '</form>',
+  };
+}
+
+/* ---- My applications ---- */
+const APP_TABS = [['all', 'All'], ['active', 'Active'], ['drafts', 'Drafts'], ['closed', 'Closed']];
+function appTabFilter(tab) {
+  if (tab === 'active') return (a) => isSubmitted(a) && isActive(a);
+  if (tab === 'drafts') return (a) => a.application_status === 'Draft';
+  if (tab === 'closed') return (a) => !isActive(a);
+  return () => true;
+}
+function pMyApps() {
+  const all = myApps();
+  const list = all.filter(appTabFilter(ui.appsTab)).sort((x, y) => new Date(y.updated_at) - new Date(x.updated_at));
+  const tabs = '<ul class="nav nav-tabs card-header-tabs" role="tablist">' + APP_TABS.map(([k, l]) =>
+    '<li class="nav-item" role="presentation"><button type="button" class="nav-link' + (ui.appsTab === k ? ' active' : '') + '" role="tab" aria-selected="' + (ui.appsTab === k) + '" data-action="apps-tab" data-tab="' + k + '">' + l + ' <span class="badge bg-secondary-lt ms-2">' + all.filter(appTabFilter(k)).length + '</span></button></li>').join('') + '</ul>';
+  const emptyText = { all: 'You haven’t applied to any opportunities yet.', active: 'You have no active applications.', drafts: 'You have no drafts.', closed: 'You have no closed applications.' }[ui.appsTab];
+  const rows = list.map((a) => {
+    const o = findOpp(a.opportunity_id);
+    const pv = profileOf(a);
+    return '<tr><td>' + nav('app', { id: a.application_id }, esc(a.application_id), 'fw-medium') + '</td>' +
+      '<td>' + esc(o.title) + '<div class="text-secondary small">' + esc(o.opportunity_id) + '</div></td>' +
+      '<td>' + esc(findEmp(o.employer_id).name) + '</td><td>' + esc(pv ? pv.label : 'Not chosen') + '</td>' +
+      '<td><div class="d-flex flex-wrap gap-1">' + appPill(a) + flagPill(a) + '</div></td><td>' + pill(a.placement_status) + '</td>' +
+      '<td class="text-nowrap">' + esc(fmtDate(a.updated_at)) + '</td><td>' + esc(nextAction(a, o)) + '</td></tr>';
+  });
+  return {
+    title: 'My applications', crumbs: [['Student', 'home'], ['My applications']],
+    body: acceptedNotice() +
+      '<div class="card"><div class="card-header">' + tabs + '</div>' +
+      (rows.length ? tableWrap('My applications', ['Application ID', 'Opportunity', 'Employer', 'Profile', 'Application status', 'Placement status', 'Last update', 'Next action'], rows)
+        : '<div class="card-body">' + empty(emptyText, ui.appsTab === 'all' ? 'Browse approved opportunities to get started.' : '', ui.appsTab === 'all' ? navBtn('opps', {}, 'Browse opportunities', 'btn-primary') : '') + '</div>') +
+      '<div class="card-footer">' + placementNote() + '</div></div>',
+  };
+}
+
+function pAppDetail(p) {
+  const a = findApp(p.id);
+  if (!a || a.student_id !== ui.studentId) return notFound('This application is not in your list.', 'apps', 'Go to my applications');
+  const o = findOpp(a.opportunity_id);
+  const e = findEmp(o.employer_id);
+  const pv = profileOf(a);
+  const rev = reviewOf(a.application_id);
+  const plc = placementOf(a.application_id);
+  const actions = [];
+  if (a.application_status === 'Draft') {
+    actions.push(navBtn('apply', { id: o.opportunity_id, app: a.application_id }, 'Continue draft', 'btn-primary w-100'));
+    actions.push('<button type="button" class="btn btn-outline-danger w-100" data-action="student-change" data-change="delete_draft" data-id="' + a.application_id + '">Delete draft</button>');
+  }
+  if (isAllowed(a, 'accept_offer')) actions.push('<button type="button" class="btn btn-primary w-100" data-action="student-change" data-change="accept_offer" data-id="' + a.application_id + '">Accept offer</button>');
+  if (isAllowed(a, 'decline_offer')) actions.push('<button type="button" class="btn w-100" data-action="student-change" data-change="decline_offer" data-id="' + a.application_id + '">Decline offer</button>');
+  if (isAllowed(a, 'withdraw')) actions.push('<button type="button" class="btn btn-outline-danger w-100" data-action="student-change" data-change="withdraw" data-id="' + a.application_id + '">Withdraw application</button>');
+  const nextTone = a.application_status === 'Offer Made' || a.application_status === 'Draft' ? 'warning' : (CLOSED_STATUSES.indexOf(a.application_status) !== -1 || a.placement_status === 'Placement not approved' ? 'danger' : 'info');
+  return {
+    title: a.application_id + ': ' + o.title, crumbs: [['Student', 'home'], ['My applications', 'apps'], [a.application_id]],
+    body:
+      '<div class="mb-3">' + nav('apps', {}, icon('back', 'icon-inline') + ' Back to my applications') + '</div>' +
+      '<div class="alert alert-' + nextTone + ' mb-3" role="status"><strong>Next step:</strong> ' + esc(nextAction(a, o)) + '</div>' +
+      acceptedNotice() +
+      '<div class="row g-4"><div class="col-lg-8">' +
+        card('Application summary', factsList([
+          ['Application ID', esc(a.application_id)], ['Opportunity', nav('opp', { id: o.opportunity_id }, esc(o.title)) + '<div class="small text-secondary">' + esc(o.opportunity_id) + '</div>'], ['Employer', esc(e.name)],
+          ['Profile version', esc(pv ? pv.label + ' (' + pv.profile_version_id + ')' : 'Not chosen')], ['Started', esc(fmtDate(a.created_at))], ['Submitted', esc(a.submitted_at ? fmtDate(a.submitted_at) : 'Not submitted')],
+          ['Application status', appPill(a) + ' ' + flagPill(a)], ['Placement status', pill(a.placement_status)], ['Last update', esc(fmtDateTime(a.updated_at))],
+        ].concat(rev ? [['Faculty review', esc(rev.review_id) + ' ' + pill(rev.review_status)]] : []).concat(plc ? [['Placement record', esc(plc.placement_id)]] : [])) +
+        '<div class="mt-3">' + placementNote() + '</div>', { cls: 'mb-3' }) +
+        (a.application_status === 'Interview Scheduled' || (a.interview && a.application_status !== 'Draft') ? interviewCard(a) : '') +
+        (a.decline_reason ? card('Employer decision', '<p class="mb-1"><strong>Reason:</strong> ' + esc(a.decline_reason) + '</p><p class="text-secondary mb-0">This application is closed. Keep applying to other opportunities.</p>', { cls: 'mb-3' }) : '') +
+        (a.placement_decision_reason ? card('University decision', '<p class="mb-0"><strong>Reason:</strong> ' + esc(a.placement_decision_reason) + '</p>', { cls: 'mb-3' }) : '') +
+        (a.cover_note ? card('Cover note', '<p class="mb-0">' + esc(a.cover_note) + '</p>', { cls: 'mb-3' }) : '') +
+        card('Status history', timeline(a)) +
+      '</div><div class="col-lg-4">' +
+        card('Actions', actions.length ? '<div class="d-flex flex-column gap-2">' + actions.join('') + '</div>' : '<p class="text-secondary mb-0">No actions are available for the current status (' + esc(a.application_status === 'Offer Accepted' ? a.placement_status : a.application_status) + ').</p>', { cls: 'mb-3' }) +
+        (a.application_status === 'Draft' ? card('', '<p class="mb-0 text-secondary">Draft – not submitted. Employers and faculty can’t see drafts.</p>') : '') +
+      '</div></div>',
+  };
+}
+
+function pProfile() {
+  const s = findStu(ui.studentId);
+  return {
+    title: 'My profile', crumbs: [['Student', 'home'], ['My profile']],
+    body:
+      card('Student record', factsList([
+        ['Student ID', esc(s.student_id)], ['Name', esc(s.display_name)], ['Program', esc(s.program)], ['Year', esc(s.year)],
+        ['Eligibility', pill('Approved', 'Eligible') + ' <span class="text-secondary small">verification deferred</span>'],
+      ]), { cls: 'mb-3' }) +
+      '<h2 class="h3 mt-4 mb-2 ipp-heading">Profile versions</h2><p class="text-secondary small">Read-only. Profile versions come from P01 (mocked for this prototype).</p>' +
+      '<div class="row row-cards">' + s.profile_versions.map((pv) => '<div class="col-md-6">' + card(esc(pv.label), factsList([
+        ['Version ID', esc(pv.profile_version_id)], ['Created', esc(fmtDate(pv.created_at))], ['CV file', esc(pv.cv_file)],
+      ]) + '<p class="mt-3 mb-2">' + esc(pv.summary) + '</p><div class="small"><span class="text-secondary">Skills:</span> ' + esc(pv.skills.join(', ')) + '</div><div class="small"><span class="text-secondary">Interests:</span> ' + esc(pv.interests.join(', ')) + '</div>', { cls: 'h-100' }) + '</div>').join('') + '</div>',
+  };
+}
+
+/* =====================================================================
+   9. Employer HR pages (simulated)
+   ===================================================================== */
+function employerPicker() {
+  return '<div class="d-flex flex-wrap align-items-end gap-3 mb-3"><div><label class="form-label" for="employer-select">Viewing as</label><select class="form-select" id="employer-select">' +
+    DB.employers.map((e) => '<option value="' + e.employer_id + '"' + (e.employer_id === ui.employerId ? ' selected' : '') + '>' + esc(e.name) + '</option>').join('') + '</select></div>' +
+    '<div class="text-secondary small pb-2">Reviewer: ' + esc(findEmp(ui.employerId).hr_contact_name) + ', HR – ' + esc(findEmp(ui.employerId).name) + '</div></div>' +
+    '<div class="alert alert-info mb-3" role="note">Simulated employer decision for testing.</div>';
+}
+function employerApps() {
+  return DB.applications.filter((a) => isSubmitted(a) && findOpp(a.opportunity_id).employer_id === ui.employerId);   // BR-04: drafts never shown
+}
+function pEmpReview() {
+  const list = employerApps().sort((x, y) => new Date(y.updated_at) - new Date(x.updated_at));
+  const rows = list.map((a) => {
+    const o = findOpp(a.opportunity_id); const s = findStu(a.student_id); const pv = profileOf(a);
+    return '<tr><td>' + nav('emp-app', { id: a.application_id }, esc(a.application_id), 'fw-medium') + '</td><td>' + esc(s.display_name) + '<div class="small text-secondary">' + esc(s.student_id) + '</div></td>' +
+      '<td>' + esc(o.title) + '<div class="small text-secondary">' + esc(o.opportunity_id) + '</div></td><td>' + esc(pv ? pv.label : '–') + '</td>' +
+      '<td>' + pill(a.application_status) + '</td><td>' + pill(a.placement_status) + '</td><td class="text-nowrap">' + esc(fmtDate(a.submitted_at)) + '</td><td class="text-nowrap">' + esc(fmtDate(a.updated_at)) + '</td></tr>';
+  });
+  return {
+    title: 'Applications to review', crumbs: [['Employer HR'], ['Applications to review']],
+    body: employerPicker() + card('Submitted applications', rows.length
+      ? tableWrap('Applications to review', ['Application ID', 'Student', 'Opportunity', 'Profile', 'Application status', 'Placement status', 'Submitted', 'Last update'], rows)
+      : '<div class="card-body">' + empty('No submitted applications for this employer yet.', 'Applications appear here after students submit them. Drafts are never shown.') + '</div>', { raw: true }),
+  };
+}
+function pEmpApp(p) {
+  const a = findApp(p.id);
+  if (!a || !isSubmitted(a)) return notFound('This application is not available. Drafts are never shown to employers.', 'emp-review', 'Back to applications');
+  const o = findOpp(a.opportunity_id);
+  if (o.employer_id !== ui.employerId) return notFound('This application belongs to another employer. Switch “Viewing as” to ' + findEmp(o.employer_id).name + '.', 'emp-review', 'Back to applications');
+  const s = findStu(a.student_id); const pv = profileOf(a);
+  const actions = ['start_review', 'shortlist', 'schedule_interview', 'make_offer', 'decline'];
+  const disabled = actions.filter((k) => !isAllowed(a, k));
+  const buttons = actions.map((k) => '<button type="button" class="btn ' + (k === 'make_offer' ? 'btn-primary' : k === 'decline' ? 'btn-outline-danger' : '') + ' w-100" data-action="employer-change" data-change="' + k + '" data-id="' + a.application_id + '"' +
+    (isAllowed(a, k) ? '' : ' disabled aria-describedby="disabled-reason"') + '>' + TRANSITIONS[k].label + '</button>').join('');
+  return {
+    title: a.application_id + ': ' + s.display_name, crumbs: [['Employer HR'], ['Applications to review', 'emp-review'], [a.application_id]],
+    body:
+      '<div class="mb-3">' + nav('emp-review', {}, icon('back', 'icon-inline') + ' Back to applications') + '</div>' +
+      '<div class="alert alert-info mb-3" role="note">Simulated employer decision for testing.</div>' +
+      '<div class="row g-4"><div class="col-lg-8">' +
+        card('Applicant', factsList([
+          ['Student', esc(s.display_name)], ['Student ID', esc(s.student_id)], ['Program', esc(s.program + ', Year ' + s.year)],
+          ['Opportunity', esc(o.title) + '<div class="small text-secondary">' + esc(o.opportunity_id) + '</div>'], ['Application status', pill(a.application_status)], ['Placement status', pill(a.placement_status)],
+        ]), { cls: 'mb-3' }) +
+        card('Profile version used', pv ? '<p class="fw-medium mb-1">' + esc(pv.label) + ' <span class="text-secondary fw-normal">(' + esc(pv.profile_version_id) + ')</span></p><p>' + esc(pv.summary) + '</p>' +
+          '<div class="small"><span class="text-secondary">Skills:</span> ' + esc(pv.skills.join(', ')) + '</div><div class="small"><span class="text-secondary">CV file:</span> ' + esc(pv.cv_file) + '</div>' +
+          (a.cover_note ? '<h3 class="h4 mt-3">Cover note</h3><p class="mb-0">' + esc(a.cover_note) + '</p>' : '') : '<p class="mb-0 text-secondary">No profile version.</p>', { cls: 'mb-3' }) +
+        interviewCard(a) +
+        (a.decline_reason ? card('Decline reason', '<p class="mb-0">' + esc(a.decline_reason) + '</p>', { cls: 'mb-3' }) : '') +
+        card('Status history', timeline(a)) +
+      '</div><div class="col-lg-4">' +
+        card('Record a decision', '<div class="d-flex flex-column gap-2">' + buttons + '</div>' +
+          (disabled.length ? '<p class="small text-secondary mt-3 mb-0" id="disabled-reason">Not available from the current status (' + esc(a.application_status) + '): ' + esc(disabled.map((k) => TRANSITIONS[k].label).join(', ')) + '.</p>' : '')) +
+      '</div></div>',
+  };
+}
+function pEmpPost() {
+  const mine = DB.opportunities.filter((o) => o.employer_id === ui.employerId).sort((x, y) => new Date(y.posted_at) - new Date(x.posted_at));
+  return {
+    title: 'Post opportunity', crumbs: [['Employer HR'], ['Post opportunity']],
+    body: employerPicker() +
+      '<div class="row g-4"><div class="col-lg-8">' +
+      '<form id="post-form" novalidate>' + card('New opportunity',
+        '<p class="text-secondary small">New listings start as Pending Review and stay hidden from students until the university approves them. (Simulated, Team 2’s part.)</p>' +
+        field('select', 'employer_id', 'Organization', { required: true, value: ui.employerId, options: DB.employers.map((e) => [e.employer_id, e.name]) }) +
+        field('text', 'title', 'Title', { required: true, placeholder: 'e.g. Operations Data Intern' }) +
+        field('textarea', 'description', 'Description', { required: true, rows: 4 }) +
+        '<div class="row g-3"><div class="col-md-4">' + field('select', 'location', 'Location', { required: true, options: [['', 'Choose…'], 'Abu Dhabi', 'Dubai', 'Remote'] }) + '</div>' +
+        '<div class="col-md-4">' + field('select', 'work_mode', 'Work mode', { value: 'On-site', options: ['On-site', 'Hybrid', 'Remote'] }) + '</div>' +
+        '<div class="col-md-4">' + field('select', 'duration', 'Duration', { value: '12 weeks', options: ['8 weeks', '10 weeks', '12 weeks', '16 weeks'] }) + '</div></div>',
+        { footer: '<div class="btn-list justify-content-end"><button type="submit" class="btn btn-primary">Submit for approval</button></div>' }) + '</form>' +
+      '</div><div class="col-lg-4">' +
+      card('Your opportunities', mine.length ? '<div class="divide-y">' + mine.map((o) => '<div><div class="fw-medium">' + esc(o.title) + '</div><div class="small text-secondary mb-1">' + esc(o.opportunity_id) + ', posted ' + esc(fmtDate(o.posted_at)) + '</div>' + pill(o.approval_status) + ' ' + pill(o.listing_status) + '</div>').join('') + '</div>' : empty('No opportunities yet.')) +
+      '</div></div>',
+  };
+}
+
+/* =====================================================================
+   10. University Administrator pages (simulated)
+   ===================================================================== */
+function pAdmListings() {
+  const queue = DB.opportunities.filter((o) => o.approval_status === 'Pending Review');
+  const rows = queue.map((o) => '<tr><td class="fw-medium">' + esc(o.opportunity_id) + '</td><td>' + esc(o.title) + '<div class="small text-secondary">' + esc(o.description.slice(0, 110)) + (o.description.length > 110 ? '…' : '') + '</div></td>' +
+    '<td>' + esc(findEmp(o.employer_id).name) + '</td><td>' + esc(o.location + ', ' + o.work_mode + ', ' + o.duration) + '</td><td class="text-nowrap">' + esc(fmtDate(o.posted_at)) + '</td><td>' + pill(o.approval_status) + '</td>' +
+    '<td><button type="button" class="btn btn-sm btn-primary" data-action="approve-listing" data-id="' + o.opportunity_id + '" aria-label="Approve ' + esc(o.opportunity_id) + '">Approve</button></td></tr>');
+  return {
+    title: 'Listing approvals', crumbs: [['University Administrator'], ['Listing approvals']],
+    body: '<div class="alert alert-info mb-3" role="note">Simulated approval step (Team 3’s part). Approving changes the same opportunity record, which then appears to students.</div>' +
+      card('Pending Review queue', rows.length ? tableWrap('Pending Review queue', ['Opportunity ID', 'Title', 'Organization', 'Details', 'Posted', 'Approval', '<span class="visually-hidden">Actions</span>'], rows)
+        : '<div class="card-body">' + empty('No listings waiting for approval.') + '</div>', { raw: true }),
+  };
+}
+function pAdmPlacements() {
+  const waiting = DB.applications.filter((a) => a.application_status === 'Offer Accepted' && a.placement_status === 'Awaiting university confirmation');
+  const decided = DB.applications.filter((a) => a.placement_status === 'Placement confirmed' || a.placement_status === 'Placement not approved');
+  const row = (a, withActions) => {
+    const o = findOpp(a.opportunity_id); const s = findStu(a.student_id);
+    const accepted = a.history.filter((h) => h.to_status === 'Offer Accepted').pop();
+    return '<tr><td class="fw-medium">' + esc(a.application_id) + '</td><td>' + esc(s.display_name) + '<div class="small text-secondary">' + esc(s.student_id) + '</div></td>' +
+      '<td>' + esc(o.title) + '<div class="small text-secondary">' + esc(o.opportunity_id) + '</div></td><td>' + esc(findEmp(o.employer_id).name) + '</td>' +
+      '<td>' + pill(a.application_status) + '</td><td>' + pill(a.placement_status) + '</td><td class="text-nowrap">' + esc(accepted ? fmtDate(accepted.timestamp) : '–') + '</td>' +
+      (withActions ? '<td><div class="btn-list flex-nowrap"><button type="button" class="btn btn-sm btn-primary" data-action="admin-change" data-change="confirm_placement" data-id="' + a.application_id + '">Confirm placement</button>' +
+        '<button type="button" class="btn btn-sm btn-outline-danger" data-action="admin-change" data-change="reject_placement" data-id="' + a.application_id + '">Do not approve</button></div></td>' : '') + '</tr>';
+  };
+  const head = ['Application ID', 'Student', 'Opportunity', 'Employer', 'Application status', 'Placement status', 'Offer accepted'];
+  return {
+    title: 'Placement confirmations', crumbs: [['University Administrator'], ['Placement confirmations']],
+    body: '<div class="alert alert-info mb-3" role="note">Only the University Administrator can confirm a placement. A placement record goes to P07 only after confirmation.</div>' +
+      card('Accepted offers waiting for confirmation', waiting.length ? tableWrap('Accepted offers waiting', head.concat(['<span class="visually-hidden">Actions</span>']), waiting.map((a) => row(a, true)))
+        : '<div class="card-body">' + empty('No accepted offers waiting for confirmation.') + '</div>', { raw: true, cls: 'mb-4' }) +
+      card('Decided', decided.length ? tableWrap('Decided placements', head, decided.map((a) => row(a, false))) : '<div class="card-body">' + empty('No placement decisions yet.') + '</div>', { raw: true }),
+  };
+}
+function pAdmHandoffs() {
+  const rows = DB.placements.map((p) => {
+    const s = findStu(p.student_id); const o = findOpp(p.opportunity_id);
+    return '<tr><td class="fw-medium">' + esc(p.placement_id) + '</td><td>' + esc(p.application_id) + '</td><td>' + esc(s.display_name) + '<div class="small text-secondary">' + esc(p.student_id) + '</div></td>' +
+      '<td>' + esc(o.title) + '<div class="small text-secondary">' + esc(p.opportunity_id) + '</div></td><td>' + esc(findEmp(p.employer_id).name) + '</td><td>' + esc(p.profile_version_id) + '</td>' +
+      '<td>' + esc(p.confirmed_by) + '</td><td class="text-nowrap">' + esc(fmtDateTime(p.confirmed_at)) + '</td><td>' + pill('Placement confirmed', p.handoff_status) + '</td></tr>';
+  });
+  const log = DB.handoffs.slice().reverse().map((h) => '<div><div class="d-flex flex-wrap justify-content-between gap-2"><div><span class="fw-medium">' + esc(h.handoff_id) + '</span> <span class="text-secondary">' + esc(h.placement_id) + ' to ' + esc(h.target) + '</span></div>' +
+    '<div class="small text-secondary">' + esc(fmtDateTime(h.sent_at)) + ', ' + esc(h.status) + '</div></div><pre class="mt-2"><code>' + esc(JSON.stringify(h.payload, null, 2)) + '</code></pre></div>').join('');
+  return {
+    title: 'Placements & P07 handoffs', crumbs: [['University Administrator'], ['Placements & P07 handoffs']],
+    body: card('Confirmed placements', rows.length ? tableWrap('Confirmed placements', ['Placement ID', 'Application', 'Student', 'Opportunity', 'Employer', 'Profile', 'Confirmed by', 'Confirmed at', 'Handoff'], rows)
+        : '<div class="card-body">' + empty('No confirmed placements yet.') + '</div>', { raw: true, cls: 'mb-4' }) +
+      card('P07 handoff log (simulated)', log ? '<div class="divide-y">' + log + '</div>' : empty('No handoffs yet.')),
+  };
+}
+
+/* =====================================================================
+   11. Faculty Reviewer pages (Team 4, read-only)
+   ===================================================================== */
+const READONLY_BADGE = '<span class="badge bg-secondary-lt readonly-badge">' + icon('eye', 'icon-inline') + ' Read-only</span>';
+function facultyNote() { return '<div class="alert alert-info mb-3" role="note">' + esc(FACULTY_NOTE) + '</div>'; }
+function facApps() { return DB.applications.filter(isSubmitted); }   // FAC-01: never drafts
+function facStats() {
+  const apps = facApps();
+  return [
+    ['Students with applications', new Set(apps.map((a) => a.student_id)).size],
+    ['Active applications', apps.filter(isActive).length],
+    ['Interviews scheduled', apps.filter((a) => a.application_status === 'Interview Scheduled').length],
+    ['Offers awaiting university confirmation', apps.filter((a) => a.placement_status === 'Awaiting university confirmation').length],
+    ['Confirmed placements', apps.filter((a) => a.placement_status === 'Placement confirmed').length],
+    ['No response 14+ days', apps.filter((a) => noResponseDays(a) != null).length],
+  ];
+}
+function pFacDash() {
+  const apps = facApps();
+  const attention = apps.filter((a) => noResponseDays(a) != null || a.placement_status === 'Awaiting university confirmation');
+  return {
+    title: 'Faculty dashboard', crumbs: [['Faculty Reviewer'], ['Dashboard']], badges: READONLY_BADGE,
+    body: facultyNote() +
+      '<div class="row row-cards mb-4">' + facStats().map(([l, v]) => '<div class="col-sm-6 col-lg-4 col-xl-2"><div class="card card-sm h-100"><div class="card-body"><div class="subheader">' + esc(l) + '</div><div class="stat-value mt-1">' + v + '</div></div></div></div>').join('') + '</div>' +
+      card('Needs attention', attention.length ? '<div class="divide-y">' + attention.map((a) => {
+        const s = findStu(a.student_id); const o = findOpp(a.opportunity_id);
+        const why = noResponseDays(a) != null ? flagPill(a) : pill('Awaiting university confirmation', 'Offer awaiting university confirmation');
+        return '<div><div class="d-flex flex-wrap justify-content-between gap-2"><div>' + nav('fac-student', { id: s.student_id }, esc(s.display_name), 'fw-medium') + ' <span class="text-secondary small">' + esc(s.student_id) + '</span>' +
+          '<div class="small">' + nav('fac-app', { id: a.application_id }, esc(a.application_id)) + ', ' + esc(o.title) + ' at ' + esc(findEmp(o.employer_id).name) + '</div></div><div>' + why + '</div></div></div>';
+      }).join('') + '</div>' : empty('Nothing needs attention right now.'), { actions: nav('fac-apps', {}, 'View all applications') }),
+  };
+}
+function facFiltered() {
+  const f = ui.fac; const q = norm(f.q);
+  return facApps().filter((a) => {
+    const s = findStu(a.student_id); const o = findOpp(a.opportunity_id);
+    if (f.student && a.student_id !== f.student) return false;
+    if (f.status && a.application_status !== f.status) return false;
+    if (f.placement && a.placement_status !== f.placement) return false;
+    if (f.employer && o.employer_id !== f.employer) return false;
+    if (q && norm(s.display_name + ' ' + s.student_id).indexOf(q) === -1) return false;
+    return true;
+  }).sort((x, y) => x.application_id < y.application_id ? -1 : 1);
+}
+function renderFacResults() {
+  const box = $('fac-results');
+  if (!box) return;
+  if (!facApps().length) { box.innerHTML = '<div class="card-body">' + empty('No student applications yet. Applications appear here after students submit them.') + '</div>'; $('fac-count').textContent = ''; return; }
+  const list = facFiltered();
+  $('fac-count').textContent = list.length === 1 ? '1 application' : list.length + ' applications';
+  box.innerHTML = list.length ? tableWrap('Student applications', ['Student name', 'Student ID', 'Organization', 'Opportunity title', 'Opportunity ID', 'Application ID', 'Review ID', 'Review status', 'Application status', 'Placement status', 'Last update'], list.map((a) => {
+    const s = findStu(a.student_id); const o = findOpp(a.opportunity_id); const r = reviewOf(a.application_id);
+    return '<tr><td>' + nav('fac-student', { id: s.student_id }, esc(s.display_name)) + '</td><td>' + esc(s.student_id) + '</td><td>' + esc(findEmp(o.employer_id).name) + '</td><td>' + esc(o.title) + '</td><td>' + esc(o.opportunity_id) + '</td>' +
+      '<td>' + nav('fac-app', { id: a.application_id }, esc(a.application_id), 'fw-medium') + '</td><td>' + esc(r ? r.review_id : '–') + '</td><td>' + pill(r ? r.review_status : 'Not started') + '</td>' +
+      '<td><div class="d-flex flex-wrap gap-1">' + pill(a.application_status) + flagPill(a) + '</div></td><td>' + pill(a.placement_status) + '</td><td class="text-nowrap">' + esc(fmtDate(a.updated_at)) + '</td></tr>';
+  })) : '<div class="card-body">' + empty('No applications match these filters.') + '</div>';
+}
+function pFacApps() {
+  const f = ui.fac; const apps = facApps();
+  const studs = Array.from(new Set(apps.map((a) => a.student_id))).map(findStu);
+  const emps = Array.from(new Set(apps.map((a) => findOpp(a.opportunity_id).employer_id))).map(findEmp);
+  const sel = (id, key, label, opts) => '<div class="col-sm-6 col-lg"><label class="form-label" for="' + id + '">' + label + '</label><select class="form-select" id="' + id + '" data-ffilter="' + key + '">' +
+    opts.map(([v, l]) => '<option value="' + esc(v) + '"' + (f[key] === v ? ' selected' : '') + '>' + esc(l) + '</option>').join('') + '</select></div>';
+  return {
+    title: 'Student applications', crumbs: [['Faculty Reviewer', 'fac-dash'], ['Student applications']], badges: READONLY_BADGE,
+    body: facultyNote() +
+      card('', '<div class="row g-3 align-items-end">' +
+        '<div class="col-12 col-lg-3"><label class="form-label" for="fac-q">Search student</label><input type="search" class="form-control" id="fac-q" value="' + esc(f.q) + '" placeholder="Name or student ID" autocomplete="off"></div>' +
+        sel('fac-student', 'student', 'Student', [['', 'All students']].concat(studs.map((s) => [s.student_id, s.display_name]))) +
+        sel('fac-status', 'status', 'Application status', [['', 'All']].concat(APP_STATUSES.filter((s) => s !== 'Draft').map((s) => [s, s]))) +
+        sel('fac-placement', 'placement', 'Placement status', [['', 'All']].concat(PLACEMENT_STATUSES.map((s) => [s, s]))) +
+        sel('fac-employer', 'employer', 'Employer', [['', 'All employers']].concat(emps.map((e) => [e.employer_id, e.name]))) +
+        '<div class="col-auto"><button type="button" class="btn btn-link" data-action="reset-fac">Clear filters</button></div></div>', { cls: 'mb-3' }) +
+      '<div class="card"><div class="card-header"><h2 class="card-title">Submitted applications</h2><div class="card-actions text-secondary small" id="fac-count" aria-live="polite"></div></div><div id="fac-results"></div></div>',
+    after: renderFacResults,
+  };
+}
+function pFacStudent(p) {
+  const s = findStu(p.id);
+  if (!s) return notFound('Student not found.', 'fac-apps', 'Back to student applications');
+  const apps = facApps().filter((a) => a.student_id === s.student_id);
+  return {
+    title: s.display_name, crumbs: [['Faculty Reviewer', 'fac-dash'], ['Student applications', 'fac-apps'], [s.student_id]], badges: READONLY_BADGE,
+    body: facultyNote() +
+      card('Student profile', factsList([
+        ['Student ID', esc(s.student_id)], ['Program', esc(s.program + ', Year ' + s.year)], ['Eligibility', esc(s.eligibility_status) + ' <span class="text-secondary small">(verification deferred)</span>'],
+        ['Profile versions', esc(s.profile_versions.map((pv) => pv.label + ' (' + pv.profile_version_id + ')').join(', '))], ['Submitted applications', esc(apps.length)],
+      ]), { cls: 'mb-4' }) +
+      (apps.length ? apps.map((a) => {
+        const o = findOpp(a.opportunity_id); const r = reviewOf(a.application_id);
+        return card(nav('fac-app', { id: a.application_id }, esc(a.application_id)) + ': ' + esc(o.title), factsList([
+          ['Organization', esc(findEmp(o.employer_id).name)], ['Opportunity ID', esc(o.opportunity_id)], ['Review', esc(r ? r.review_id : '–') + ' ' + pill(r ? r.review_status : 'Not started')],
+          ['Application status', pill(a.application_status) + ' ' + flagPill(a)], ['Placement status', pill(a.placement_status)], ['Last update', esc(fmtDate(a.updated_at))],
+        ]) + '<h3 class="h4 mt-3">Status history</h3>' + timeline(a), { cls: 'mb-3' });
+      }).join('') : card('', empty('No submitted applications for this student yet.'))),
+  };
+}
+function pFacApp(p) {
+  const a = findApp(p.id);
+  if (!a || !isSubmitted(a)) return notFound('This record is not available. Drafts are never shown to faculty.', 'fac-apps', 'Back to student applications', READONLY_BADGE);
+  const s = findStu(a.student_id); const o = findOpp(a.opportunity_id); const r = reviewOf(a.application_id); const plc = placementOf(a.application_id); const pv = profileOf(a);
+  return {
+    title: a.application_id + ': ' + s.display_name, crumbs: [['Faculty Reviewer', 'fac-dash'], ['Student applications', 'fac-apps'], [a.application_id]], badges: READONLY_BADGE,
+    body: facultyNote() +
+      '<div class="row g-4"><div class="col-lg-8">' +
+        card('Record', factsList([
+          ['Application ID', esc(a.application_id)], ['Student', nav('fac-student', { id: s.student_id }, esc(s.display_name))], ['Student ID', esc(s.student_id)],
+          ['Opportunity', esc(o.title)], ['Opportunity ID', esc(o.opportunity_id)], ['Organization', esc(findEmp(o.employer_id).name)],
+          ['Profile version', esc(pv ? pv.label + ' (' + pv.profile_version_id + ')' : '–')], ['Review ID', esc(r ? r.review_id : '–')], ['Faculty ID', esc(r ? r.faculty_id : FACULTY.id)],
+          ['Review status', pill(r ? r.review_status : 'Not started')], ['Submitted', esc(fmtDateTime(a.submitted_at))], ['Last update', esc(fmtDateTime(a.updated_at))],
+        ]), { cls: 'mb-3' }) +
+        interviewCard(a) +
+        (a.decline_reason ? card('Employer decline reason', '<p class="mb-0">' + esc(a.decline_reason) + '</p>', { cls: 'mb-3' }) : '') +
+        card('Status history', timeline(a)) +
+      '</div><div class="col-lg-4">' +
+        card('Statuses', '<dl class="facts mb-0"><dt>Application status</dt><dd>' + pill(a.application_status) + ' ' + flagPill(a) + '</dd><dt>Placement status</dt><dd>' + pill(a.placement_status) + '</dd>' +
+          (plc ? '<dt>Placement record</dt><dd>' + esc(plc.placement_id) + ', ' + esc(plc.handoff_status) + '</dd>' : '') + '</dl><p class="small text-secondary mt-3 mb-0">' + esc(FACULTY_NOTE) + '</p>') +
+      '</div></div>',
+  };
+}
+
+/* =====================================================================
+   12. About (shared)
+   ===================================================================== */
+const TRACE = [
+  ['FR-01, FR-02, BR-01, BR-02', 'IPP-06', 'Opportunities, detail', 'T01–T03'],
+  ['FR-03', 'P04-01', 'Compare', 'T04'],
+  ['FR-04, BR-03, BR-04', 'IPP-07, IPP-08, P04-02, P04-03', 'Apply, My applications', 'T05–T07'],
+  ['FR-05, FR-06, FR-09', 'IPP-09, P04-08, P04-09', 'My applications, detail', 'T08, T09'],
+  ['FR-07, FR-08, FR-10, BR-07–BR-09', 'P04-04–P04-06', 'Detail, Employer review', 'T10–T12, T14, T15'],
+  ['FR-11, FR-12, BR-05, BR-06', 'P04-07', 'Admin placements, handoffs', 'T12, T13'],
+  ['FR-13, BR-11', 'IPP-11 / FAC-01', 'Faculty applications', 'T16'],
+  ['FR-14, BR-05', 'IPP-12 / FAC-02', 'Faculty list and detail', 'T17'],
+  ['FR-15, BR-10', 'FAC-03', 'All faculty pages', 'T18'],
+  ['FR-16', 'FAC-04', 'Faculty dashboard', 'T20'],
+  ['FR-17–FR-21, BR-12', 'IPP-01, IPP-05, IPP-13–IPP-16', 'Employer, Admin, global', 'T19, T21–T23'],
+];
+function pAbout() {
+  const li = (arr) => '<ul class="mb-0">' + arr.map((x) => '<li>' + esc(x) + '</li>').join('') + '</ul>';
+  return {
+    title: 'About this prototype', crumbs: [['About']],
+    body:
+      '<div class="row row-cards mb-4"><div class="col-md-6">' +
+        card('Works in this prototype', li(['Browsing, search, filters and compare for approved opportunities', 'Drafts, submitting with a profile version, the duplicate rule and withdrawing', 'The application tracker with status history, next actions and the no-response flag', 'Employer decisions, offer responses and university placement confirmation, all on the same record', 'Faculty review records (REV-###) and a read-only faculty view', 'Data that persists across role switches and reloads in this browser']), { cls: 'h-100' }) +
+      '</div><div class="col-md-6">' +
+        card('Simulated', li(['Role switching (a demo shortcut, not security)', 'All people and organizations (synthetic data)', 'Employer decisions and posting (Team 2’s part)', 'Listing approval (Team 3’s part)', 'P01 profile versions, P05 recommendations and the P07 handoff', 'Storage: this browser only']), { cls: 'h-100' }) +
+      '</div></div>' +
+      card('Requirements traceability', tableWrap('Traceability', ['Requirement', 'Story', 'Screen', 'Tests'], TRACE.map((r) => '<tr>' + r.map((c) => '<td>' + esc(c) + '</td>').join('') + '</tr>')), { raw: true, cls: 'mb-4' }) +
+      card('Deferred (out of scope)', li(['Real login and access control (IPP-17)', 'Central shared storage (IPP-18)', 'Admin “return for revision” (IPP-19)', 'Eligibility rule checking (IPP-20)', 'Faculty review decisions (IPP-21)', 'Real hiring decisions, contracts, visas, emails and recruiting messages', 'AI matching (P05) and learning plans (P07)', 'Tracking applications made outside the platform']) +
+        '<p class="text-secondary small mt-3 mb-0">Requirements are open assumptions until the Product Owner confirms them. Built from the IPP Group 4 Prototype Specification v2.</p>'),
+  };
+}
+
+function notFound(msg, page, label, badges) {
+  return { title: 'Not available', crumbs: [['Not available']], badges: badges, body: card('', empty(msg, '', navBtn(page, {}, label, 'btn-primary'))) };
+}
+
+/* =====================================================================
+   13. Routing and shell rendering
+   ===================================================================== */
+const PAGES = {
+  home: ['student', pStudentHome], opps: ['student', pOpps], opp: ['student', pOppDetail], compare: ['student', pCompare],
+  apply: ['student', pApply], apps: ['student', pMyApps], app: ['student', pAppDetail], profile: ['student', pProfile],
+  'emp-review': ['employer', pEmpReview], 'emp-app': ['employer', pEmpApp], 'emp-post': ['employer', pEmpPost],
+  'adm-listings': ['admin', pAdmListings], 'adm-placements': ['admin', pAdmPlacements], 'adm-handoffs': ['admin', pAdmHandoffs],
+  'fac-dash': ['faculty', pFacDash], 'fac-apps': ['faculty', pFacApps], 'fac-student': ['faculty', pFacStudent], 'fac-app': ['faculty', pFacApp],
+  about: [null, pAbout],
+};
+const MENUS = {
+  student: [['home', 'Home', 'home'], ['opps', 'Opportunities', 'briefcase'], ['compare', () => 'Compare (' + ui.compare.length + ')', 'columns'], ['apps', 'My applications', 'file'], ['profile', 'My profile', 'user']],
+  employer: [['emp-review', 'Applications to review', 'inbox'], ['emp-post', 'Post opportunity', 'plus']],
+  admin: [['adm-listings', 'Listing approvals', 'check', () => DB.opportunities.filter((o) => o.approval_status === 'Pending Review').length],
+    ['adm-placements', 'Placement confirmations', 'org', () => DB.applications.filter((a) => a.placement_status === 'Awaiting university confirmation').length],
+    ['adm-handoffs', 'Placements & P07 handoffs', 'send']],
+  faculty: [['fac-dash', 'Faculty dashboard', 'dashboard'], ['fac-apps', 'Student applications', 'users']],
+};
+const ROLE_LABEL = { student: 'Student', employer: 'Employer HR', admin: 'University Administrator', faculty: 'Faculty Reviewer' };
+const PAGE_GROUP = { opp: 'opps', apply: 'opps', app: 'apps', 'emp-app': 'emp-review', 'fac-student': 'fac-apps', 'fac-app': 'fac-apps' };
+
+function renderShell() {
+  const items = MENUS[ui.role].concat([['about', 'About this prototype', 'info']]);
+  const current = PAGE_GROUP[ui.page] || ui.page;
+  $('menu-heading').textContent = ROLE_LABEL[ui.role] + ' menu';
+  $('menu').innerHTML = items.map(([page, label, ic, count]) => {
+    const l = typeof label === 'function' ? label() : label;
+    const n = count ? count() : null;
+    return '<li class="nav-item"><a href="#" class="nav-link' + (current === page ? ' active' : '') + '" data-nav="' + page + '"' + (current === page ? ' aria-current="page"' : '') + '>' +
+      '<span class="nav-link-icon">' + icon(ic) + '</span><span class="nav-link-title">' + esc(l) + '</span>' + (n ? '<span class="badge bg-green-lt">' + n + '</span>' : '') + '</a></li>';
+  }).join('');
+  $('role-select').value = ui.role;
+  $('student-pick').hidden = ui.role !== 'student';
+  $('student-select').innerHTML = DB.students.map((s) => '<option value="' + s.student_id + '"' + (s.student_id === ui.studentId ? ' selected' : '') + '>' + esc(s.display_name + ' (' + s.student_id + ')') + '</option>').join('');
+  const who = ui.role === 'student' ? findStu(ui.studentId).display_name : ui.role === 'employer' ? findEmp(ui.employerId).hr_contact_name : ui.role === 'admin' ? 'Sara Ali' : FACULTY.name;
+  const sub = ui.role === 'student' ? ui.studentId + ', ' + findStu(ui.studentId).program : ui.role === 'employer' ? 'HR – ' + findEmp(ui.employerId).name : ui.role === 'admin' ? 'Career Services' : 'Faculty Reviewer, ' + FACULTY.id;
+  $('person-name').textContent = who;
+  $('person-role').textContent = sub;
+  $('person-avatar').textContent = initials(who);
+}
+
+function render() {
+  const entry = PAGES[ui.page];
+  if (!entry || (entry[0] && entry[0] !== ui.role)) { ui.page = DEFAULT_PAGE[ui.role]; ui.params = {}; }
+  renderShell();
+  const view = PAGES[ui.page][1](ui.params);
+  document.title = view.title + ' – IPP';
+  $('page-title').textContent = view.title;
+  $('page-badges').innerHTML = view.badges || '';
+  $('crumbs').innerHTML = view.crumbs.map((c, i) => {
+    const last = i === view.crumbs.length - 1;
+    if (last || !c[1]) return '<li class="breadcrumb-item' + (last ? ' active' : '') + '"' + (last ? ' aria-current="page"' : '') + '>' + esc(c[0]) + '</li>';
+    return '<li class="breadcrumb-item">' + nav(c[1], c[2] || {}, esc(c[0])) + '</li>';
+  }).join('');
+  if (ui.flash) {
+    const f = ui.flash;
+    $('flash').innerHTML = '<div class="alert alert-' + f.type + ' alert-dismissible mb-3" role="' + (f.type === 'danger' || f.type === 'warning' ? 'alert' : 'status') + '">' + esc(f.text) +
+      '<button type="button" class="btn-close" data-action="dismiss-flash" aria-label="Dismiss message"></button></div>';
+    ui.flash = null;
+  } else {
+    $('flash').innerHTML = '';
+  }
+  $('view').innerHTML = view.body;
+  if (view.after) view.after();
+}
+
+function go(page, params) {
+  ui.page = page; ui.params = params || {};
+  render();
+  closeMenu();
+  window.scrollTo(0, 0);
+  ($('flash').innerHTML ? $('flash') : $('page-title')).focus({ preventScroll: true });
+}
+function rerender() {
+  render();
+  if ($('flash').innerHTML) $('flash').focus({ preventScroll: true });
+}
+
+/* =====================================================================
+   14. Modal (Esc closes, focus trapped, Enter submits)
+   ===================================================================== */
+let modalState = null, modalReturn = null, backdrop = null;
+function openModal(o) {
+  modalState = o;
+  $('modal-title').textContent = o.title;
+  $('modal-body').innerHTML = o.body;
+  const c = $('modal-confirm');
+  c.textContent = o.confirmLabel || 'Confirm';
+  c.className = 'btn ' + (o.danger ? 'btn-danger' : 'btn-primary');
+  modalReturn = document.activeElement;
+  const m = $('modal');
+  m.hidden = false; m.classList.add('show');
+  backdrop = document.createElement('div'); backdrop.className = 'modal-backdrop show'; document.body.appendChild(backdrop);
+  document.body.classList.add('modal-open');
+  const first = m.querySelector('#modal-body input:not([type=hidden]), #modal-body select, #modal-body textarea');
+  (first || $('modal-cancel')).focus();
+}
+function closeModal(restore) {
+  const m = $('modal');
+  m.classList.remove('show'); m.hidden = true;
+  if (backdrop) { backdrop.remove(); backdrop = null; }
+  document.body.classList.remove('modal-open');
+  modalState = null;
+  if (restore && modalReturn && document.contains(modalReturn)) modalReturn.focus();
+}
+$('modal').addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') { e.preventDefault(); closeModal(true); return; }
+  if (e.key === 'Tab') {
+    const f = Array.from($('modal').querySelectorAll('button:not([disabled]), input, select, textarea')).filter((x) => x.offsetParent !== null);
+    if (!f.length) return;
+    if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+    else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+  }
+});
+$('modal').addEventListener('click', (e) => { if (e.target === $('modal')) closeModal(true); });
+$('modal-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  if (!modalState) return;
+  const data = Object.fromEntries(new FormData($('modal-form')).entries());
+  const res = modalState.onConfirm(data);
+  if (res && res.errors) { showErrors($('modal-body'), res.errors); return; }
+  closeModal(false);
+  if (document.activeElement === document.body || !document.activeElement) ($('flash').innerHTML ? $('flash') : $('page-title')).focus({ preventScroll: true });
+});
+
+/* =====================================================================
+   15. Actions
+   ===================================================================== */
+function runChange(appId, action, extra, success) {
+  const res = changeStatus(appId, action, actor(), extra);
+  if (!res.ok) {
+    if (res.errors) return { errors: res.errors };
+    if (res.field === 'reason') return { errors: { reason: res.msg } };
+    setFlash('danger', res.msg);
+    rerender();
     return null;
   }
-  function studentName(d, id) {
-    for (var i = 0; i < d.students.length; i++) if (d.students[i].student_id === id) return d.students[i].full_name;
-    return '';
-  }
-  function hasActiveApplication(d, studentId, oppId) {
-    return d.applications.some(function (a) {
-      return a.student_id === studentId && a.opportunity_id === oppId && INACTIVE_STATUSES.indexOf(a.application_status) === -1;
-    });
-  }
-  function formatDate(iso) {
-    var dt = new Date(iso);
-    if (isNaN(dt)) return esc(iso);
-    return dt.toLocaleString(undefined, { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-  }
-  function initials(name) {
-    return name.split(/\s+/).filter(Boolean).slice(0, 2).map(function (w) { return w.charAt(0).toUpperCase(); }).join('');
-  }
-  var TONES = ['bg-green-lt', 'bg-azure-lt', 'bg-orange-lt', 'bg-purple-lt', 'bg-teal-lt'];
-  function tone(employerId) {
-    var n = parseInt(String(employerId).replace(/\D/g, ''), 10) || 0;
-    return TONES[n % TONES.length];
-  }
-  function nextStep(status) {
-    return status === STATUS_SUBMITTED ? 'Wait for the employer’s review.' : '';
-  }
-  function approvalBadge(status) {
-    var cls = status === 'Approved' ? 'bg-green' : 'bg-yellow';
-    return '<span class="badge ' + cls + ' me-1"></span> ' + esc(status);
-  }
-  function appStatusBadge(status) {
-    return '<span class="badge bg-blue me-1"></span> ' + esc(status);
-  }
-  function placementBadge(status) {
-    return '<span class="badge bg-secondary me-1"></span> ' + esc(status);
-  }
+  setFlash('success', success(res));
+  return res;
+}
 
-  var ICONS = {
-    org: '<path d="M8 9l5 5v7h-5v-4m0 4h-5v-7l5 -5m1 1v-6a1 1 0 0 1 1 -1h10a1 1 0 0 1 1 1v17h-8"/><path d="M13 7v.01"/><path d="M17 7v.01"/><path d="M17 11v.01"/><path d="M17 15v.01"/>',
-    pin: '<path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z"/>',
-    mode: '<path d="M3 19h18"/><path d="M5 7a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v8a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1z"/>',
-    clock: '<path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 7v5l3 3"/>',
-    check: '<path d="M5 12l5 5l10 -10"/>',
-    info: '<path d="M3 12a9 9 0 1 0 9 -9a9 9 0 0 0 -9 9"/><path d="M12 9h.01"/><path d="M11 12h1v4h1"/>',
-    back: '<path d="M5 12h14"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/>'
-  };
-  function icon(name, cls) {
-    return '<svg xmlns="http://www.w3.org/2000/svg" class="icon ' + (cls || 'icon-inline') + '" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICONS[name] + '</svg>';
+function studentChange(appId, action) {
+  const a = findApp(appId);
+  const o = findOpp(a.opportunity_id);
+  const cfg = {
+    withdraw: { title: 'Withdraw application', body: '<p>Withdraw ' + esc(a.application_id) + ' for <strong>' + esc(o.title) + '</strong> at ' + esc(findEmp(o.employer_id).name) + '?</p><p class="text-secondary mb-0">The employer will see that you withdrew. This can’t be undone.</p>', label: 'Withdraw', danger: true,
+      done: () => a.application_id + ' withdrawn. Next step: You withdrew this application.' },
+    accept_offer: { title: 'Accept offer', body: '<p>Accept the offer for <strong>' + esc(o.title) + '</strong> at ' + esc(findEmp(o.employer_id).name) + '?</p><p class="text-secondary mb-0">Your placement stays “Awaiting university confirmation” until the university confirms it.</p>', label: 'Accept offer',
+      done: () => 'Offer accepted for ' + a.application_id + '. Placement: Awaiting university confirmation. Next step: wait for the university to confirm your placement.' },
+    decline_offer: { title: 'Decline offer', body: '<p>Decline the offer for <strong>' + esc(o.title) + '</strong>?</p><p class="text-secondary mb-0">This can’t be undone.</p>', label: 'Decline offer', danger: true,
+      done: () => 'You declined the offer for ' + a.application_id + '.' },
+    delete_draft: { title: 'Delete draft', body: '<p>Delete draft ' + esc(a.application_id) + ' for <strong>' + esc(o.title) + '</strong>?</p><p class="text-secondary mb-0">The draft is removed. Its ID is not reused.</p>', label: 'Delete draft', danger: true,
+      done: () => 'Draft ' + a.application_id + ' deleted.' },
+  }[action];
+  openModal({ title: cfg.title, body: cfg.body, confirmLabel: cfg.label, danger: cfg.danger, onConfirm: () => {
+    const res = runChange(appId, action, {}, cfg.done);
+    if (res) { if (res.deleted) go('apps'); else rerender(); }
+    return res && res.errors ? res : null;
+  } });
+}
+
+function employerChange(appId, action) {
+  const a = findApp(appId);
+  const label = TRANSITIONS[action].label;
+  if (action === 'schedule_interview') {
+    const d = new Date(Date.now() + 5 * DAY);
+    const iso = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    openModal({ title: 'Schedule interview for ' + a.application_id,
+      body: '<div class="row g-3"><div class="col-sm-6">' + field('date', 'date', 'Date', { required: true, value: iso }) + '</div><div class="col-sm-6">' + field('time', 'time', 'Time', { required: true, value: '10:00' }) + '</div></div>' +
+        field('select', 'mode', 'Mode', { required: true, value: 'Online', options: ['Online', 'On-site', 'Phone'] }) +
+        field('text', 'location_or_link', 'Location or link', { required: true, value: 'Microsoft Teams link (sent by the employer)' }) +
+        field('textarea', 'notes', 'Notes for the student (optional)', { rows: 2 }),
+      confirmLabel: 'Schedule interview',
+      onConfirm: (data) => {
+        const res = runChange(appId, action, { interview: data }, (r) => a.application_id + ' moved to Interview Scheduled. The student sees the interview details now.');
+        if (res && !res.errors) rerender();
+        return res && res.errors ? res : null;
+      } });
+    return;
   }
-
-  /* ---------- Flash messages ---------- */
-  function flash(type, text, focus) {
-    var role = type === 'success' || type === 'info' ? 'status' : 'alert';
-    var ic = type === 'success' ? 'check' : 'info';
-    $('flash').innerHTML =
-      '<div class="alert alert-' + type + ' alert-dismissible mb-4" role="' + role + '">' +
-        '<div class="d-flex"><div class="me-2">' + icon(ic, 'alert-icon') + '</div><div>' + esc(text) + '</div></div>' +
-        '<button type="button" class="btn-close" data-action="dismiss-flash" aria-label="Dismiss message"></button>' +
-      '</div>';
-    if (focus) $('flash').focus();
+  if (action === 'decline') {
+    openModal({ title: 'Decline ' + a.application_id, body: field('textarea', 'reason', 'Reason (shown to the student)', { required: true, rows: 3 }), confirmLabel: 'Decline application', danger: true,
+      onConfirm: (data) => {
+        const res = runChange(appId, action, { reason: data.reason }, () => a.application_id + ' declined. The student sees the reason and next action.');
+        if (res && !res.errors) rerender();
+        return res && res.errors ? res : null;
+      } });
+    return;
   }
-  function clearFlash() { $('flash').innerHTML = ''; }
+  const res = runChange(appId, action, {}, (r) => a.application_id + ' moved to ' + r.app.application_status + '.');
+  if (res) rerender();
+}
 
-  /* ---------- State ---------- */
-  var state = { role: 'student', tab: 'opps', detailId: null, query: '', lastDetailTrigger: null };
-
-  var ROLE_META = {
-    student: { title: 'Find and apply for internships', subtitle: 'Viewing as Alex Lee (STU-001), the demo student.' },
-    employer: { title: 'Employer HR', subtitle: 'Stand-in so the role switch works. The real view is built by Group 2.' },
-    admin: { title: 'University Administrator', subtitle: 'Stand-in for Group 3’s approval step. Approve an opportunity to make it visible to students.' },
-    faculty: { title: 'Faculty', subtitle: 'Stand-in that reads the shared Application records. Owner to be confirmed.' }
-  };
-
-  /* ---------- Student: Opportunities list ---------- */
-  function renderOpps() {
-    var d = load();
-    var approved = d.opportunities.filter(function (o) { return o.approval_status === 'Approved'; });
-    var grid = $('opp-grid'), empty = $('opp-empty'), emptyText = $('opp-empty-text'), count = $('opp-count');
-
-    if (approved.length === 0) {
-      $('search-wrap').hidden = true;
-      grid.innerHTML = '';
-      count.textContent = '';
-      emptyText.textContent = 'No approved opportunities yet. Please check back later.';
-      empty.hidden = false;
-      return;
-    }
-    $('search-wrap').hidden = false;
-
-    var q = normalize(state.query);
-    var shown = approved.filter(function (o) {
-      if (!q) return true;
-      return normalize(o.title).indexOf(q) !== -1 || normalize(orgName(d, o.employer_id)).indexOf(q) !== -1;
-    });
-
-    if (shown.length === 0) {
-      grid.innerHTML = '';
-      count.textContent = '';
-      emptyText.textContent = 'No opportunities match your search.';
-      empty.hidden = false;
-      return;
-    }
-    empty.hidden = true;
-    count.textContent = 'Showing ' + shown.length + ' approved ' + (shown.length === 1 ? 'opportunity' : 'opportunities') + '.';
-
-    grid.innerHTML = shown.map(function (o) {
-      var org = orgName(d, o.employer_id);
-      var items = [
-        ['pin', 'Location', o.location],
-        ['mode', 'Work mode', o.work_mode],
-        ['clock', 'Duration', o.duration]
-      ];
-      var inline = items.map(function (it) {
-        return '<div class="list-inline-item">' + icon(it[0]) + ' <span class="visually-hidden">' + it[1] + ': </span>' + esc(it[2]) + '</div>';
-      }).join('');
-      var stacked = items.map(function (it) {
-        return '<div class="list-item">' + icon(it[0]) + ' <span class="visually-hidden">' + it[1] + ': </span>' + esc(it[2]) + '</div>';
-      }).join('');
-      return '' +
-        '<div class="col-12 col-md-6">' +
-          '<div class="card h-100">' +
-            '<div class="row g-0 h-100">' +
-              '<div class="col-auto"><div class="card-body"><span class="avatar avatar-md ' + tone(o.employer_id) + '" aria-hidden="true">' + esc(initials(org)) + '</span></div></div>' +
-              '<div class="col">' +
-                '<div class="card-body ps-0 d-flex flex-column h-100">' +
-                  '<div class="row">' +
-                    '<div class="col"><h2 class="h3 mb-0">' + esc(o.title) + '</h2><div class="text-secondary mt-1">' + icon('org') + ' <span class="visually-hidden">Organization: </span>' + esc(org) + '</div></div>' +
-                    '<div class="col-auto"><span class="badge badge-outline text-secondary fw-normal badge-pill"><span class="visually-hidden">Opportunity ID: </span>' + esc(o.opportunity_id) + '</span></div>' +
-                  '</div>' +
-                  '<div class="mt-2 list-inline list-inline-dots mb-0 text-secondary d-sm-block d-none">' + inline + '</div>' +
-                  '<div class="mt-2 list mb-0 text-secondary d-block d-sm-none">' + stacked + '</div>' +
-                  '<div class="mt-auto pt-3">' +
-                    '<button type="button" class="btn" data-action="details" data-id="' + esc(o.opportunity_id) + '" aria-label="View details for ' + esc(o.title) + '">View details</button>' +
-                  '</div>' +
-                '</div>' +
-              '</div>' +
-            '</div>' +
-          '</div>' +
-        '</div>';
-    }).join('');
+function adminChange(appId, action) {
+  const a = findApp(appId);
+  const s = findStu(a.student_id);
+  if (action === 'confirm_placement') {
+    openModal({ title: 'Confirm placement', body: '<p>Confirm the placement for ' + esc(s.display_name) + ' (' + esc(a.application_id) + ')?</p><p class="text-secondary mb-0">This creates ' + esc('PLC-' + pad(DB.counters.plc + 1)) + ' and sends the placement record to P07 (simulated).</p>',
+      confirmLabel: 'Confirm placement', onConfirm: () => {
+        const res = runChange(appId, action, {}, (r) => 'Placement confirmed for ' + a.application_id + '. ' + r.placement.placement_id + ' created and sent to P07 (simulated).');
+        if (res) rerender();
+        return null;
+      } });
+    return;
   }
+  openModal({ title: 'Do not approve placement', body: '<p>' + esc(s.display_name) + ', ' + esc(a.application_id) + '</p>' + field('textarea', 'reason', 'Reason', { required: true, rows: 3 }), confirmLabel: 'Do not approve', danger: true,
+    onConfirm: (data) => {
+      const res = runChange(appId, action, { reason: data.reason }, () => 'Placement not approved for ' + a.application_id + '. The student is told to contact Career Services.');
+      if (res && !res.errors) rerender();
+      return res && res.errors ? res : null;
+    } });
+}
 
-  /* ---------- Student: details ---------- */
-  function renderDetail(focusHeading) {
-    var d = load();
-    var o = findOpp(d, state.detailId);
-    if (!o || o.approval_status !== 'Approved') { closeDetail(false); return; }
-    var org = orgName(d, o.employer_id);
-    var applied = hasActiveApplication(d, DEMO_STUDENT, o.opportunity_id);
-
-    var action = applied
-      ? '<button type="button" class="btn" disabled>Already applied</button>'
-      : '<button type="button" class="btn btn-primary" data-action="apply" data-id="' + esc(o.opportunity_id) + '">Apply</button>';
-
-    $('opp-detail-view').innerHTML =
-      '<div class="card">' +
-        '<div class="card-header">' +
-          '<div>' +
-            '<h2 class="card-title" id="detail-heading" tabindex="-1">' + esc(o.title) + '</h2>' +
-            '<p class="card-subtitle mb-0">' + esc(org) + '</p>' +
-          '</div>' +
-          '<div class="card-actions"><span class="badge badge-outline text-secondary fw-normal badge-pill"><span class="visually-hidden">Opportunity ID: </span>' + esc(o.opportunity_id) + '</span></div>' +
-        '</div>' +
-        '<div class="card-body">' +
-          '<div class="space-y">' +
-            '<div><h3 class="h4">About this internship</h3><p class="detail-desc mb-0">' + esc(o.description) + '</p></div>' +
-            '<div class="datagrid">' +
-              '<div class="datagrid-item"><div class="datagrid-title">Location</div><div class="datagrid-content">' + esc(o.location) + '</div></div>' +
-              '<div class="datagrid-item"><div class="datagrid-title">Work mode</div><div class="datagrid-content">' + esc(o.work_mode) + '</div></div>' +
-              '<div class="datagrid-item"><div class="datagrid-title">Duration</div><div class="datagrid-content">' + esc(o.duration) + '</div></div>' +
-              '<div class="datagrid-item"><div class="datagrid-title">Organization</div><div class="datagrid-content">' + esc(org) + '</div></div>' +
-            '</div>' +
-          '</div>' +
-        '</div>' +
-        '<div class="card-footer">' +
-          '<div class="btn-list justify-content-between">' +
-            '<button type="button" class="btn btn-ghost-secondary" data-action="back">' + icon('back', '') + ' Back</button>' +
-            action +
-          '</div>' +
-          (applied ? '<p class="text-secondary text-end mt-2 mb-0" id="already-msg">' + MSG_DUPLICATE + '</p>' : '') +
-        '</div>' +
-      '</div>';
-
-    $('opps-list-view').hidden = true;
-    $('opp-detail-view').hidden = false;
-    if (focusHeading) $('detail-heading').focus();
+function handleApply(mode) {
+  const form = $('apply-form');
+  const o = findOpp(ui.params.id);
+  const draftId = ui.params.app;
+  const chosen = form.querySelector('input[name="profile"]:checked');
+  const pv = chosen ? chosen.value : '';
+  const note = form.querySelector('[name="cover_note"]').value.trim();
+  const act = actor();
+  if (mode === 'draft') {
+    const res = draftId ? updateDraft(draftId, pv, note, act) : createApplication(ui.studentId, o.opportunity_id, pv, note, 'Draft', act);
+    if (!res.ok) { setFlash('danger', res.msg); rerender(); return; }
+    setFlash('success', 'Draft ' + res.app.application_id + ' saved. It is not visible to employers or faculty until you submit it.');
+    go('app', { id: res.app.application_id });
+    return;
   }
-
-  function openDetail(id, trigger) {
-    state.detailId = id;
-    state.lastDetailTrigger = id;
-    renderDetail(true);
-  }
-  function closeDetail(restoreFocus) {
-    state.detailId = null;
-    $('opp-detail-view').hidden = true;
-    $('opp-detail-view').innerHTML = '';
-    $('opps-list-view').hidden = false;
-    renderOpps();
-    if (restoreFocus && state.lastDetailTrigger) {
-      var btn = document.querySelector('#opp-grid [data-id="' + state.lastDetailTrigger + '"]');
-      if (btn) btn.focus();
-    }
-  }
-
-  /* ---------- Student: apply ---------- */
-  function submitApplication(oppId) {
-    var d = load();
-    var o = findOpp(d, oppId);
-    if (!o || o.approval_status !== 'Approved') {
-      flash('danger', 'This opportunity is not open for applications.', true);
+  if (!pv) { showErrors(form, { profile: 'Please choose a profile version.' }); return; }
+  const pvObj = findStu(ui.studentId).profile_versions.find((x) => x.profile_version_id === pv);
+  const e = findEmp(o.employer_id);
+  openModal({ title: 'Submit application',
+    body: '<p>Submit your application to <strong>' + esc(o.title) + '</strong> at <strong>' + esc(e.name) + '</strong> using <strong>' + esc(pvObj.label) + '</strong>? Submitting does not approve a placement.</p>',
+    confirmLabel: 'Submit application',
+    onConfirm: () => {
+      const res = draftId ? changeStatus(draftId, 'submit', act, { profile_version_id: pv, cover_note: note }) : createApplication(ui.studentId, o.opportunity_id, pv, note, 'Submitted', act);
+      if (!res.ok) { setFlash('danger', res.msg); rerender(); return null; }
+      const rev = reviewOf(res.app.application_id);
+      setFlash('success', 'Application ' + res.app.application_id + ' submitted. Status: Submitted. Placement: Not placed. Faculty review record ' + rev.review_id + ' created (Not started).');
+      go('app', { id: res.app.application_id });
       return null;
-    }
-    if (hasActiveApplication(d, DEMO_STUDENT, oppId)) {
-      flash('warning', MSG_DUPLICATE, true);
-      return null;
-    }
-    var highest = d.last_application_number || 0;
-    d.applications.forEach(function (a) {
-      var n = parseInt(String(a.application_id).replace(/^APP-/, ''), 10);
-      if (n > highest) highest = n;
-    });
-    var num = highest + 1;
-    var app = {
-      application_id: 'APP-' + String(num).padStart(3, '0'),
-      student_id: DEMO_STUDENT,
-      opportunity_id: oppId,
-      application_status: STATUS_SUBMITTED,
-      placement_status: PLACEMENT_NOT_PLACED,
-      submitted_at: new Date().toISOString()
-    };
-    d.applications.push(app);
-    d.last_application_number = num;
-    save(d);
-    return app;
-  }
+    } });
+}
 
-  /* ---------- Modal ---------- */
-  var modal = $('apply-modal');
-  var backdrop = null, modalFocusReturn = null, pendingOpp = null;
+function handlePost() {
+  const form = $('post-form');
+  const data = Object.fromEntries(new FormData(form).entries());
+  const errors = {};
+  if (!data.employer_id) errors.employer_id = 'Please choose an organization.';
+  if (!data.title.trim()) errors.title = 'Please enter a title.';
+  if (!data.description.trim()) errors.description = 'Please enter a description.';
+  if (!data.location) errors.location = 'Please choose a location.';
+  if (Object.keys(errors).length) { showErrors(form, errors); return; }
+  DB.counters.opp++;
+  const id = 'OPP-' + pad(DB.counters.opp);
+  DB.opportunities.push({ opportunity_id: id, employer_id: data.employer_id, title: data.title.trim(), location: data.location, work_mode: data.work_mode, duration: data.duration,
+    stipend: 'Not specified', deadline: at(30, 23, 59), approval_status: 'Pending Review', listing_status: 'Open', positions: 1, posted_at: new Date().toISOString(),
+    description: data.description.trim(), responsibilities: [], requirements: [], skills: [], recommendation: null });
+  save();
+  ui.employerId = data.employer_id;
+  setFlash('success', id + ' posted as Pending Review. Students can’t see it until the University Administrator approves it.');
+  rerender();
+}
 
-  function openModal(oppId) {
-    var d = load();
-    var o = findOpp(d, oppId);
-    if (!o) return;
-    if (hasActiveApplication(d, DEMO_STUDENT, oppId)) {
-      flash('warning', MSG_DUPLICATE, true);
-      renderDetail(false);
+function toggleCompare(input) {
+  const id = input.getAttribute('data-compare');
+  const msg = $('compare-msg');
+  if (input.checked) {
+    if (ui.compare.length >= 2) {
+      input.checked = false;
+      if (msg) msg.innerHTML = '<div class="alert alert-warning mb-3" role="alert">You can compare two opportunities at a time.</div>';
       return;
     }
-    pendingOpp = oppId;
-    $('modal-title-text').textContent = o.title;
-    $('modal-org-text').textContent = orgName(d, o.employer_id);
-    modalFocusReturn = document.activeElement;
-    modal.hidden = false;
-    modal.classList.add('show');
-    backdrop = document.createElement('div');
-    backdrop.className = 'modal-backdrop show';
-    document.body.appendChild(backdrop);
-    document.body.classList.add('modal-open');
-    $('modal-cancel').focus();
+    if (ui.compare.indexOf(id) === -1) ui.compare.push(id);
+  } else {
+    ui.compare = ui.compare.filter((x) => x !== id);
   }
-  function closeModal(returnFocus) {
-    modal.classList.remove('show');
-    modal.hidden = true;
-    if (backdrop) { backdrop.remove(); backdrop = null; }
-    document.body.classList.remove('modal-open');
-    pendingOpp = null;
-    if (returnFocus && modalFocusReturn && document.contains(modalFocusReturn)) modalFocusReturn.focus();
-    modalFocusReturn = null;
-  }
-  function confirmModal() {
-    var oppId = pendingOpp;
-    closeModal(false);
-    var app = submitApplication(oppId);
-    if (app) {
-      flash('success', 'Application ' + app.application_id + ' submitted. Status: ' + app.application_status +
-        '. Placement: ' + app.placement_status + '. Next step: wait for the employer’s review.', true);
-    }
-    renderDetail(false);
-    renderAppsCount();
-  }
-  modal.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') { e.preventDefault(); closeModal(true); return; }
-    if (e.key === 'Tab') {
-      var f = modal.querySelectorAll('button:not([disabled])');
-      var first = f[0], last = f[f.length - 1];
-      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-    }
+  if (msg) msg.innerHTML = '';
+  updateCompareUi();
+  document.querySelectorAll('[data-compare]').forEach((el) => {
+    const lbl = el.parentElement.querySelector('.form-check-label');
+    if (lbl && /Add to compare/.test(lbl.textContent)) lbl.textContent = 'Add to compare (' + ui.compare.length + ' of 2)';
   });
-  modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(true); });
+}
 
-  /* ---------- Student: My applications ---------- */
-  function myApps(d) {
-    return d.applications
-      .filter(function (a) { return a.student_id === DEMO_STUDENT; })
-      .sort(function (a, b) {
-        if (a.submitted_at === b.submitted_at) return a.application_id < b.application_id ? 1 : -1;
-        return a.submitted_at < b.submitted_at ? 1 : -1;
-      });
+/* =====================================================================
+   16. Events
+   ===================================================================== */
+function closeMenu() { $('sidebar-menu').classList.remove('show'); $('menu-toggle').setAttribute('aria-expanded', 'false'); }
+
+document.addEventListener('click', (e) => {
+  const n = e.target.closest('[data-nav]');
+  if (n) {
+    e.preventDefault();
+    if (n.disabled) return;
+    const params = {};
+    if (n.dataset.id) params.id = n.dataset.id;
+    if (n.dataset.app) params.app = n.dataset.app;
+    go(n.dataset.nav, params);
+    return;
   }
-  function renderAppsCount() {
-    $('apps-count').textContent = myApps(load()).length;
+  const b = e.target.closest('[data-action]');
+  if (!b) { if (e.target.closest('#menu-toggle')) { const m = $('sidebar-menu'); const open = !m.classList.contains('show'); m.classList.toggle('show', open); $('menu-toggle').setAttribute('aria-expanded', String(open)); } return; }
+  const act = b.dataset.action;
+  if (act === 'modal-close') { closeModal(true); return; }
+  if (act === 'dismiss-flash') { $('flash').innerHTML = ''; $('page-title').focus({ preventScroll: true }); return; }
+  if (act === 'reset') {
+    openModal({ title: 'Reset demo', body: '<p>Restore the seed data?</p><p class="text-secondary mb-0">All new applications, decisions, postings and placements in this browser are cleared. Dates are regenerated from today.</p>', confirmLabel: 'Reset demo', danger: true,
+      onConfirm: () => { DB = buildSeed(); save(); ui = freshUi(); setFlash('info', 'Demo reset. Seed data restored and new records cleared.'); go('home'); return null; } });
+    return;
   }
-  function renderApps() {
-    var d = load();
-    var list = myApps(d);
-    renderAppsCount();
-    if (list.length === 0) {
-      $('apps-body').innerHTML = '';
-      $('apps-table-wrap').hidden = true;
-      $('apps-empty').hidden = false;
-      return;
+  if (act === 'home-tab') { ui.homeTab = b.dataset.tab; render(); document.querySelector('[data-action="home-tab"][data-tab="' + ui.homeTab + '"]').focus(); return; }
+  if (act === 'apps-tab') { ui.appsTab = b.dataset.tab; render(); document.querySelector('[data-action="apps-tab"][data-tab="' + ui.appsTab + '"]').focus(); return; }
+  if (act === 'reset-filters') { ui.opp = { q: '', sector: '', location: '', modes: [], duration: '', showClosed: false }; render(); $('opp-q').focus(); return; }
+  if (act === 'clear-compare') { ui.compare = []; render(); return; }
+  if (act === 'reset-fac') { ui.fac = { q: '', student: '', status: '', placement: '', employer: '' }; render(); $('fac-q').focus(); return; }
+  if (act === 'save-draft') { handleApply('draft'); return; }
+  if (act === 'student-change') { studentChange(b.dataset.id, b.dataset.change); return; }
+  if (act === 'employer-change') { if (!b.disabled) employerChange(b.dataset.id, b.dataset.change); return; }
+  if (act === 'admin-change') { adminChange(b.dataset.id, b.dataset.change); return; }
+  if (act === 'approve-listing') {
+    const o = findOpp(b.dataset.id);
+    if (o && o.approval_status === 'Pending Review') {
+      o.approval_status = 'Approved'; o.approved_at = new Date().toISOString(); o.approved_by = ADMIN.name;
+      save();
+      setFlash('success', o.opportunity_id + ' approved. It now appears to students.');
     }
-    $('apps-table-wrap').hidden = false;
-    $('apps-empty').hidden = true;
-    $('apps-body').innerHTML = list.map(function (a) {
-      var o = findOpp(d, a.opportunity_id) || {};
-      return '<tr>' +
-        '<td data-label="Application ID"><span class="fw-medium">' + esc(a.application_id) + '</span></td>' +
-        '<td data-label="Opportunity"><div>' + esc(o.title || 'Unknown opportunity') + '</div><div class="text-secondary small">' + esc(a.opportunity_id) + '</div></td>' +
-        '<td data-label="Organization" class="text-secondary">' + esc(orgName(d, o.employer_id)) + '</td>' +
-        '<td data-label="Submitted" class="text-secondary">' + formatDate(a.submitted_at) + '</td>' +
-        '<td data-label="Application status">' + appStatusBadge(a.application_status) + '</td>' +
-        '<td data-label="Placement status">' + placementBadge(a.placement_status) + '</td>' +
-        '<td data-label="Next step">' + esc(nextStep(a.application_status)) + '</td>' +
-      '</tr>';
-    }).join('');
+    rerender();
   }
+});
 
-  /* ---------- Stand-in views ---------- */
-  function renderEmployer() {
-    var d = load();
-    $('employer-body').innerHTML = d.opportunities.map(function (o) {
-      return '<tr>' +
-        '<td data-label="Opportunity ID">' + esc(o.opportunity_id) + '</td>' +
-        '<td data-label="Title">' + esc(o.title) + '</td>' +
-        '<td data-label="Organization" class="text-secondary">' + esc(orgName(d, o.employer_id)) + '</td>' +
-        '<td data-label="Approval status">' + approvalBadge(o.approval_status) + '</td>' +
-      '</tr>';
-    }).join('');
+document.addEventListener('change', (e) => {
+  const t = e.target;
+  if (t.id === 'role-select') { ui.role = t.value; ui.flash = null; go(DEFAULT_PAGE[ui.role]); return; }
+  if (t.id === 'student-select') { ui.studentId = t.value; ui.compare = []; go('home'); return; }
+  if (t.id === 'employer-select') { ui.employerId = t.value; render(); $('employer-select').focus(); return; }
+  if (t.hasAttribute('data-compare')) { toggleCompare(t); return; }
+  if (t.dataset.filter) {
+    const k = t.dataset.filter;
+    if (k === 'mode') ui.opp.modes = Array.from(document.querySelectorAll('[data-filter="mode"]:checked')).map((x) => x.value);
+    else if (k === 'closed') ui.opp.showClosed = t.checked;
+    else ui.opp[k] = t.value;
+    renderOppResults();
+    return;
   }
-  function renderAdmin() {
-    var d = load();
-    $('admin-body').innerHTML = d.opportunities.map(function (o) {
-      var btn = o.approval_status === 'Pending Review'
-        ? '<button type="button" class="btn btn-sm" data-action="approve" data-id="' + esc(o.opportunity_id) + '" aria-label="Approve ' + esc(o.opportunity_id) + '">Approve</button>'
-        : '';
-      return '<tr>' +
-        '<td data-label="Opportunity ID">' + esc(o.opportunity_id) + '</td>' +
-        '<td data-label="Title">' + esc(o.title) + '</td>' +
-        '<td data-label="Organization" class="text-secondary">' + esc(orgName(d, o.employer_id)) + '</td>' +
-        '<td data-label="Approval status">' + approvalBadge(o.approval_status) + '</td>' +
-        '<td>' + btn + '</td>' +
-      '</tr>';
-    }).join('');
-  }
-  function renderFaculty() {
-    var d = load();
-    var list = d.applications.slice().sort(function (a, b) { return a.application_id < b.application_id ? -1 : 1; });
-    $('faculty-empty').hidden = list.length > 0;
-    $('faculty-body').closest('.table-responsive').hidden = list.length === 0;
-    $('faculty-body').innerHTML = list.map(function (a) {
-      var o = findOpp(d, a.opportunity_id) || {};
-      return '<tr>' +
-        '<td data-label="Application ID"><span class="fw-medium">' + esc(a.application_id) + '</span></td>' +
-        '<td data-label="Student">' + esc(a.student_id) + '<div class="text-secondary small">' + esc(studentName(d, a.student_id)) + '</div></td>' +
-        '<td data-label="Opportunity">' + esc(a.opportunity_id) + '<div class="text-secondary small">' + esc((o.title || '') + (o.employer_id ? ', ' + orgName(d, o.employer_id) : '')) + '</div></td>' +
-        '<td data-label="Submitted" class="text-secondary">' + formatDate(a.submitted_at) + '</td>' +
-        '<td data-label="Application status">' + appStatusBadge(a.application_status) + '</td>' +
-        '<td data-label="Placement status">' + placementBadge(a.placement_status) + '</td>' +
-      '</tr>';
-    }).join('');
-  }
+  if (t.dataset.ffilter) { ui.fac[t.dataset.ffilter] = t.value; renderFacResults(); }
+});
+document.addEventListener('input', (e) => {
+  if (e.target.id === 'opp-q') { ui.opp.q = e.target.value; renderOppResults(); }
+  if (e.target.id === 'fac-q') { ui.fac.q = e.target.value; renderFacResults(); }
+});
+document.addEventListener('submit', (e) => {
+  if (e.target.id === 'apply-form') { e.preventDefault(); handleApply('submit'); }
+  if (e.target.id === 'post-form') { e.preventDefault(); handlePost(); }
+  if (e.target.id === 'opp-filters') e.preventDefault();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && $('sidebar-menu').classList.contains('show')) { closeMenu(); $('menu-toggle').focus(); }
+});
+window.addEventListener('storage', (e) => { if (e.key === KEY) { DB = loadDb(); render(); } });
 
-  /* ---------- Navigation ---------- */
-  function setTab(tab) {
-    state.tab = tab;
-    ['opps', 'apps'].forEach(function (t) {
-      var btn = $('tab-' + t), panel = $('panel-' + t);
-      var on = t === tab;
-      btn.classList.toggle('active', on);
-      btn.setAttribute('aria-selected', on ? 'true' : 'false');
-      panel.hidden = !on;
-    });
-    if (tab === 'apps') renderApps();
-    else if (state.detailId) renderDetail(false);
-    else renderOpps();
-  }
-
-  function setRole(role) {
-    state.role = role;
-    clearFlash();
-    document.querySelectorAll('[data-role]').forEach(function (b) {
-      var on = b.getAttribute('data-role') === role;
-      b.classList.toggle('active', on);
-      if (on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
-    });
-    ['student', 'employer', 'admin', 'faculty'].forEach(function (r) { $('view-' + r).hidden = r !== role; });
-    $('page-title').textContent = ROLE_META[role].title;
-    $('page-subtitle').textContent = ROLE_META[role].subtitle;
-    renderCurrent();
-    var menu = $('sidebar-menu');
-    if (menu.classList.contains('show')) toggleMenu(false);
-  }
-
-  function renderCurrent() {
-    if (state.role === 'student') {
-      renderAppsCount();
-      setTab(state.tab);
-    } else if (state.role === 'employer') renderEmployer();
-    else if (state.role === 'admin') renderAdmin();
-    else renderFaculty();
-  }
-
-  function toggleMenu(force) {
-    var menu = $('sidebar-menu');
-    var open = typeof force === 'boolean' ? force : !menu.classList.contains('show');
-    menu.classList.toggle('show', open);
-    $('menu-toggle').setAttribute('aria-expanded', open ? 'true' : 'false');
-  }
-
-  /* ---------- Events ---------- */
-  document.addEventListener('click', function (e) {
-    var t = e.target.closest('button');
-    if (!t) return;
-    if (t.id === 'menu-toggle') { toggleMenu(); return; }
-    if (t.id === 'reset-demo') {
-      closeModal(false);
-      save(clone(SEED));
-      state.tab = 'opps'; state.detailId = null; state.query = '';
-      $('opp-search').value = '';
-      renderCurrent();
-      flash('info', 'Demo data reset to the seed records.', false);
-      return;
-    }
-    if (t.hasAttribute('data-role')) { setRole(t.getAttribute('data-role')); return; }
-    if (t.hasAttribute('data-tab')) { setTab(t.getAttribute('data-tab')); return; }
-    switch (t.getAttribute('data-action')) {
-      case 'details': clearFlash(); openDetail(t.getAttribute('data-id'), t); break;
-      case 'back': closeDetail(true); break;
-      case 'apply': openModal(t.getAttribute('data-id')); break;
-      case 'modal-cancel': closeModal(true); break;
-      case 'modal-submit': confirmModal(); break;
-      case 'dismiss-flash': clearFlash(); break;
-      case 'approve': {
-        var d = load();
-        var o = findOpp(d, t.getAttribute('data-id'));
-        if (o && o.approval_status === 'Pending Review') {
-          o.approval_status = 'Approved';
-          save(d);
-          renderAdmin();
-          flash('success', o.opportunity_id + ' is now Approved and visible to students.', true);
-        }
-        break;
-      }
-    }
-  });
-
-  $('opp-search').addEventListener('input', function (e) {
-    state.query = e.target.value;
-    renderOpps();
-  });
-
-  window.addEventListener('storage', function (e) {
-    if (e.key === STORE_KEY) renderCurrent();
-  });
-
-  /* ---------- Start ---------- */
-  load();
-  renderCurrent();
+/* =====================================================================
+   17. Start (Student view, Layla)
+   ===================================================================== */
+DB = loadDb();
+render();
 })();
 </script>
 </body>
